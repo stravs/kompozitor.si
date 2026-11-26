@@ -22,8 +22,7 @@ test('Research proposal is a coherent, honest sales preview', () => {
   assert.deepEqual([...calc.matchAll(/<input\b[^>]*type="radio"[^>]*value="(\d+)"/g)].map(([, v]) => v), ['1', '2', '3', '4', '5', '6']);
   assert.match(calc, /value="1"[^>]*checked/);
   assert.match(calc, /data-out="setup"[^>]*>349 €</);
-  assert.match(calc, /data-out="first"[^>]*>409 €<\/span> \+ domena/);
-  assert.match(calc, /Od drugega leta, letno<\/dt><dd[^>]*>60 € \+ domena</);
+  assert.match(calc, /Vzdrževanje<\/p>[\s\S]*?>60 €<\/p>[\s\S]*?\+ domena/);
   assert.doesNotMatch(html, /90 €\/leto|60 ali 90 €/);
   const contact = html.match(/<section\b[^>]*id="stik"[^>]*>([\s\S]*?)<\/section>/)?.[1] ?? '';
   const form = contact.match(/<form\b[^>]*>/)?.[0] ?? '';

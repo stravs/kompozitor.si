@@ -69,16 +69,16 @@ const maintenance = [
   ['E-naslov z imenom vaše strani', 'Npr. info@vasa-nastanitev.si. Sporočila prihajajo v vaš obstoječi e-predal. Brez doplačila.'],
 ];
 const questions = [
-  ['Zakaj sploh potrebujem svojo spletno stran?', 'Da niste odvisni samo od Bookinga. Če Booking ali Airbnb spremeni pravila ali provizije ali vaš oglas skrije, lahko ostanete brez gostov. Lastna stran je vaša. Gostje vam prek nje pišejo neposredno, brez provizije. Vse več ljudi nastanitve išče tudi z orodji umetne inteligence, ki dostikrat predlagajo povezave do uradnih strani nastanitev.'],
-  ['Koliko stane predogled?', 'Nič. Predogled pripravimo v 3 delovnih dneh in vas na nič ne veže. Če vam ni všeč, ne plačate ničesar.'],
-  ['Ali moram prenehati uporabljati Booking?', 'Ne. Booking in Airbnb lahko obdržite. Stran je dodaten kraj, kjer vas gostje spoznajo in vam pišejo neposredno.'],
+  ['Zakaj lastna spletna stran?', 'Z lastno stranjo niste odvisni le od Bookinga. Če Booking ali Airbnb spremeni pravila ali provizije ali vaš oglas skrije, lahko ostanete brez gostov. Lastna stran je vaša. Gostje vam prek nje pišejo neposredno, brez provizije. Vse več ljudi nastanitve išče tudi z orodji umetne inteligence, ki dostikrat predlagajo povezave do uradnih strani nastanitev.'],
+  ['Koliko stane predogled?', 'Predogled je brezplačen. Pripravimo ga v 3 delovnih dneh. Če vam ni všeč, ne plačate ničesar.'],
+  ['Kaj se zgodi z oglasom na Bookingu ali Airbnbju?', 'Nič. Oglas ostane, kot je. Spletna stran je dodaten kraj, kjer vas gostje spoznajo in vam pišejo neposredno.'],
   ['Ali je sporočilo prek obrazca že rezervacija?', 'Ne. Sporočilo gosta pride na vaš e-naslov, termin in ceno pa se z njim dogovorite sami. Stran nima koledarja zasedenosti in ne sprejema plačil.'],
   ['V katerih jezikih je stran?', 'V slovenščini, angleščini, nemščini in italijanščini, brez doplačila. Slovensko in angleško različico pregledamo sami. Nemščine in italijanščine ne govorimo, zato vam ti različici pred objavo pošljemo v pregled.'],
-  ['Zakaj ne Wix?', 'Pri Wixu stran naredite sami. Pri Izbi nam pošljete povezavo, za ostalo poskrbimo mi.'],
-  ['Kaj pa zunanji rezervacijski sistemi, ki jih že uporabljam?', 'Preverimo, kako lahko vaš rezervacijski sistem (npr. Bentral ali SnapGuest) povežemo s spletno stranjo. Če je povezava mogoča, jo za zdaj uredimo brez doplačila.'],
-  ['Kaj potrebujete od mene?', 'Samo povezavo do oglasa na Bookingu ali Airbnbju. Ne potrebujemo gesel, novih besedil ali fotografij.'],
-  ['Čigava sta stran in njen naslov?', 'Naslov strani (domeno) registriramo na vaše ime in ga zaračunamo toliko, kolikor stane nas. Če se kdaj odločite končati sodelovanje, stran ugasne, vi pa obdržite naslov in dobite vse datoteke strani. Pri selitvi vam pomagamo.'],
-  ['Koliko je cena domene?', 'Domena .si stane približno 15 do 20 € na leto z DDV, domena .com podobno. Zaračunamo jo toliko, kolikor stane nas, in vam ceno povemo pred registracijo.'],
+  ['V čem se Izba razlikuje od orodij, kot je Wix?', 'Pri Wixu in podobnih orodjih stran izdelate sami. Pri Izbi zadošča povezava do oglasa, za vse ostalo poskrbimo mi.'],
+  ['Je stran mogoče povezati z rezervacijskim sistemom?', 'Preverimo, kako lahko obstoječi rezervacijski sistem (npr. Bentral ali SnapGuest) povežemo s spletno stranjo. Če je povezava mogoča, jo za zdaj uredimo brez doplačila.'],
+  ['Kaj je potrebno za začetek?', 'Le povezava do oglasa na Bookingu ali Airbnbju. Gesla, nova besedila in fotografije niso potrebni.'],
+  ['Kdo je lastnik domene?', 'Naslov strani (domeno) registriramo na vaše ime in ga zaračunamo toliko, kolikor stane nas. Če se kdaj odločite končati sodelovanje, stran ugasne, vi pa obdržite naslov in dobite vse datoteke strani. Pri selitvi vam pomagamo.'],
+  ['Koliko stane domena?', 'Domena .si stane približno 15 do 20 € na leto z DDV, domena .com podobno. Zaračunamo jo toliko, kolikor stane nas, in vam ceno povemo pred registracijo.'],
 ];
 ---
 <!doctype html>
@@ -294,16 +294,23 @@ const questions = [
               </div>
             </fieldset>
 
-            <div aria-live="polite" class="mt-7 border-t border-white/20 pt-6 sm:mt-8">
-              <p class="text-sm text-(--on-deep)">Izdelava strani, enkratno</p>
-              <p class="mt-1 flex flex-wrap items-baseline gap-x-3"><output data-out="setup" class="text-[clamp(3rem,8vw,4.5rem)] leading-none font-semibold tracking-[-.05em] text-(--accent) tabular-nums">{euro(pricing.base)}</output><span data-out="formula" class="text-sm text-(--on-deep)">ena enota · vsaka naslednja +{euro(pricing.perUnit)}</span></p>
-              <p data-quote hidden class="mt-3 max-w-[40ch] text-sm leading-relaxed text-(--on-deep)">Pri večjih nastanitvah ceno določimo po pregledu gradiva. Pošljite povezavo in pripravimo ponudbo.</p>
-              <dl data-priced class="mt-6 divide-y divide-white/20 border-y border-white/20 text-sm sm:text-base">
-                <div class="flex justify-between gap-4 py-3"><dt class="font-semibold">Prvo leto, plačilo ob objavi</dt><dd class="text-right font-semibold tabular-nums"><span data-out="first">{euro(pricing.base + pricing.yearly)}</span> + domena</dd></div>
-                <div class="flex justify-between gap-4 py-3"><dt class="text-(--on-deep)">Od drugega leta, letno</dt><dd class="text-right font-semibold tabular-nums">{euro(pricing.yearly)} + domena</dd></div>
-              </dl>
-              <p class="mt-4 text-sm leading-relaxed text-(--on-deep)">Vključeno: štirje jeziki (slovenščina, angleščina, nemščina, italijanščina), obrazec za sporočila gostov, priprava za iskalnike in AI pomočnike ter en krog popravkov.</p>
+            <div aria-live="polite" class="mt-7 grid gap-6 border-t border-white/20 pt-6 sm:mt-8 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:gap-5">
+              <div>
+                <p class="text-sm font-semibold">Izdelava strani</p>
+                <p class="text-sm text-(--on-deep)">enkratno</p>
+                <output data-out="setup" class="mt-3 block text-[clamp(2.75rem,7vw,4rem)] leading-none font-semibold tracking-[-.05em] text-(--accent) tabular-nums">{euro(pricing.base)}</output>
+                <p data-out="formula" class="mt-2 text-sm text-(--on-deep)">ena enota · vsaka naslednja +{euro(pricing.perUnit)}</p>
+                <p data-quote hidden class="mt-2 max-w-[40ch] text-sm leading-relaxed text-(--on-deep)">Pri večjih nastanitvah ceno določimo po pregledu gradiva. Pošljite povezavo in pripravimo ponudbo.</p>
+              </div>
+              <span data-priced aria-hidden="true" class="text-4xl leading-none font-light text-(--on-deep) max-sm:hidden sm:self-center">+</span>
+              <div data-priced class="border-t border-white/20 pt-6 sm:border-0 sm:pt-0">
+                <p class="text-sm font-semibold">Vzdrževanje</p>
+                <p class="text-sm text-(--on-deep)">letno, od objave naprej</p>
+                <p class="mt-3 text-[clamp(2.75rem,7vw,4rem)] leading-none font-semibold tracking-[-.05em] tabular-nums">{euro(pricing.yearly)}</p>
+                <p class="mt-2 text-sm text-(--on-deep)">+ domena, približno 15–20 €</p>
+              </div>
             </div>
+            <p class="mt-6 border-t border-white/20 pt-5 text-sm leading-relaxed text-(--on-deep)">Vključeno: štirje jeziki (slovenščina, angleščina, nemščina, italijanščina), obrazec za sporočila gostov, priprava za iskalnike in AI pomočnike ter en krog popravkov.</p>
 
             <a href="#stik" class={`${buttonOnDark} mt-6`}>Pošljite povezavo do oglasa</a>
           </div>
@@ -471,7 +478,7 @@ const questions = [
       const units = Number((event.target as HTMLInputElement).value);
       const setup = setupPrice(units);
       calc.querySelector<HTMLElement>('[data-quote]')!.hidden = setup !== null;
-      calc.querySelector<HTMLElement>('[data-priced]')!.hidden = setup === null;
+      for (const el of calc.querySelectorAll<HTMLElement>('[data-priced]')) el.hidden = setup === null;
       if (setup === null) {
         out('setup').textContent = 'Po dogovoru';
         out('formula').textContent = '';
@@ -479,7 +486,6 @@ const questions = [
       }
       out('setup').textContent = euro(setup);
       out('formula').textContent = units === 1 ? `ena enota · vsaka naslednja +${euro(pricing.perUnit)}` : `${euro(pricing.base)} + ${units - 1} × ${euro(pricing.perUnit)}`;
-      out('first').textContent = euro(setup + pricing.yearly);
       const select = document.querySelector<HTMLSelectElement>('#enote');
       if (select) select.value = String(units);
     });
