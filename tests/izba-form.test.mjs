@@ -44,14 +44,38 @@ test('Flags the hidden honeypot field as spam', () => {
   assert.equal(result.spam, true);
 });
 
+const submission = () => new Request('https://izba.kompozitor.si/api/izba', {
+  method: 'POST',
+  headers: { Accept: 'application/json' },
+  body: form([['povezava', 'booking.com/x'], ['email', 'gost@example.com'], ['to', 'other@example.com']]),
+});
+
+test('Sends to the private recipient setting and uses the visitor as Reply-To', async () => {
+  const sent = [];
+  const response = await worker.fetch(submission(), {
+    IZBA_RECIPIENT: 'inbox@example.com',
+    EMAIL: { send: async (message) => sent.push(message) },
+  });
+  assert.deepEqual(await response.json(), { ok: true });
+  assert.equal(sent.length, 1);
+  assert.equal(sent[0].to, 'inbox@example.com');
+  assert.equal(sent[0].from.email, 'anze@kompozitor.si');
+  assert.equal(sent[0].replyTo, 'gost@example.com');
+});
+
+test('Does not send without one configured recipient', async () => {
+  const EMAIL = { send: async () => assert.fail('Must not send') };
+  for (const IZBA_RECIPIENT of [undefined, 'one@example.com,two@example.com']) {
+    const response = await worker.fetch(submission(), { EMAIL, IZBA_RECIPIENT });
+    assert.equal(response.status, 503);
+    assert.deepEqual(await response.json(), { ok: false });
+  }
+});
+
 test('Logs the email failure code without exposing it to the visitor', async (t) => {
   const log = t.mock.method(console, 'error', () => {});
-  const request = new Request('https://izba.kompozitor.si/api/izba', {
-    method: 'POST',
-    headers: { Accept: 'application/json' },
-    body: form([['povezava', 'booking.com/x'], ['email', 'gost@example.com']]),
-  });
-  const response = await worker.fetch(request, {
+  const response = await worker.fetch(submission(), {
+    IZBA_RECIPIENT: 'inbox@example.com',
     EMAIL: {
       async send() {
         throw Object.assign(new Error('Delivery error for gost@example.com'), { code: 'E_SENDER_DOMAIN_NOT_CONFIGURED' });
@@ -63,4 +87,15 @@ test('Logs the email failure code without exposing it to the visitor', async (t)
   assert.deepEqual(log.mock.calls.map(({ arguments: args }) => args), [
     ['Izba form: sending failed (E_SENDER_DOMAIN_NOT_CONFIGURED)'],
   ]);
+});
+
+test('Redirects legacy Izba URLs on the apex to the subdomain, not preview URLs', async () => {
+  const env = { ASSETS: { fetch: () => new Response('preview') } };
+  for (const path of ['/izba', '/izba/', '/izba/index.html']) {
+    const response = await worker.fetch(new Request(`https://kompozitor.si${path}?ref=test`), env);
+    assert.equal(response.status, 308);
+    assert.equal(response.headers.get('Location'), 'https://izba.kompozitor.si/?ref=test');
+  }
+  const preview = await worker.fetch(new Request('https://kompozitor-si.example.workers.dev/izba/'), env);
+  assert.equal(await preview.text(), 'preview');
 });

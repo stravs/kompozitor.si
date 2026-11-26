@@ -2,13 +2,15 @@ import { buildEmail, parseSubmission } from './izba-form.ts';
 
 interface Env {
   ASSETS: { fetch(request: Request): Promise<Response> };
-  EMAIL: {
+  IZBA_RECIPIENT?: string;
+  EMAIL?: {
     send(message: { from: { email: string; name: string }; to: string; replyTo: string; subject: string; text: string }): Promise<unknown>;
   };
 }
 
-const FROM = { email: 'izba@kompozitor.si', name: 'Izba' };
-const TO = 'anze@kompozitor.si';
+const FROM = { email: 'anze@kompozitor.si', name: 'Izba' };
+const CONTACT = 'anze@kompozitor.si';
+const MAILBOX = /^[A-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Z0-9-]+(?:\.[A-Z0-9-]+)+$/i;
 const IZBA_HOST = 'izba.kompozitor.si';
 
 function reply(request: Request, status: number, body: Record<string, unknown>) {
@@ -16,7 +18,7 @@ function reply(request: Request, status: number, body: Record<string, unknown>) 
   // Fallback for browsers without JavaScript: a plain page with a way back.
   const message = status === 200
     ? 'Hvala! Prejeli smo vašo nastanitev. Predogled vam pošljemo v 3 delovnih dneh.'
-    : `Pošiljanje ni uspelo. Pišite nam na ${TO}.`;
+    : `Pošiljanje ni uspelo. Pišite nam na ${CONTACT}.`;
   const home = new URL(request.url).hostname === IZBA_HOST ? '/' : '/izba/';
   return new Response(
     `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Izba</title><p>${message}</p><p><a href="${home}">Nazaj na Izbo</a></p>`,
@@ -35,8 +37,12 @@ async function handleIzba(request: Request, env: Env) {
   const parsed = parseSubmission(form);
   if (!parsed.ok) return reply(request, 400, { ok: false, errors: parsed.errors });
   if (parsed.spam) return reply(request, 200, { ok: true });
+  const to = env.IZBA_RECIPIENT?.trim();
+  if (!to || to.length > 254 || !MAILBOX.test(to) || !env.EMAIL) {
+    return reply(request, 503, { ok: false });
+  }
   try {
-    await env.EMAIL.send({ from: FROM, to: TO, replyTo: parsed.data.email, ...buildEmail(parsed.data) });
+    await env.EMAIL.send({ from: FROM, to, replyTo: parsed.data.email, ...buildEmail(parsed.data) });
   } catch (error) {
     const code = typeof error === 'object' && error !== null && 'code' in error ? error.code : undefined;
     const reason = typeof code === 'string' && /^E_[A-Z0-9_]+$/.test(code)
@@ -55,13 +61,17 @@ export default {
       if (request.method !== 'POST') return new Response('Method Not Allowed', { status: 405, headers: { Allow: 'POST' } });
       return handleIzba(request, env);
     }
+    const legacyIzbaPath = ['/izba', '/izba/', '/izba/index.html'].includes(url.pathname);
+    if (url.hostname === 'kompozitor.si' && legacyIzbaPath) {
+      return Response.redirect(`https://${IZBA_HOST}/${url.search}`, 308);
+    }
     if (url.hostname !== IZBA_HOST) return env.ASSETS.fetch(request);
 
     if (url.pathname === '/') {
       url.pathname = '/izba/';
       return env.ASSETS.fetch(new Request(url, request));
     }
-    if (['/izba', '/izba/', '/izba/index.html', '/index.html'].includes(url.pathname)) {
+    if (legacyIzbaPath || url.pathname === '/index.html') {
       url.pathname = '/';
       return Response.redirect(url, 308);
     }
