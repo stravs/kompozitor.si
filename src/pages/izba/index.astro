@@ -111,7 +111,7 @@ const questions = [
       <section class={`${shell} grid gap-7 pt-8 pb-11 sm:gap-12 sm:py-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.04fr)] lg:items-center lg:gap-9 lg:py-[clamp(3.25rem,5vw,5.5rem)] xl:gap-12`}>
         <div>
           <p class="flex items-baseline gap-2.5 text-sm font-medium text-(--muted)"><span class="size-2 shrink-0 rounded-full bg-(--tone)" aria-hidden="true"></span>Spletne strani za apartmaje in manjše nastanitve</p>
-          <h1 class="mt-4 max-w-[15ch] text-[clamp(2.35rem,11vw,3.55rem)] leading-[.96] font-semibold tracking-[-.052em] text-balance [word-spacing:.025em] sm:mt-6 sm:text-[clamp(3.35rem,6.5vw,4.5rem)] lg:text-[clamp(3.35rem,5.72vw,6rem)]">Iz vašega <span class="sr-only text-(--tone) motion-reduce:not-sr-only">Booking.com/<wbr />Airbnb</span><span class="inline-grid text-(--tone) motion-reduce:hidden"><span aria-hidden="true" class="col-start-1 row-start-1 animate-roll will-change-transform">Booking.com</span><span aria-hidden="true" class="col-start-1 row-start-1 animate-roll opacity-0 will-change-transform [animation-delay:-3s]">Airbnb</span></span> oglasa do spletne strani <span class="block"><span class="relative isolate -mx-[.1em] inline-block before:absolute before:inset-0 before:-z-10 before:origin-left before:animate-highlight before:rounded-[.12em] before:bg-(--deep) motion-reduce:before:animate-none"><span class="-my-[.1em] inline-block bg-[linear-gradient(to_right,var(--accent)_50%,var(--ink)_50%)] bg-size-[200%_100%] bg-left bg-clip-text px-[.1em] py-[.1em] text-transparent animate-highlight-text motion-reduce:animate-none">po meri.</span></span></span></h1>
+          <h1 class="mt-4 max-w-[15ch] text-[clamp(2.35rem,11vw,3.55rem)] leading-[.96] font-semibold tracking-[-.052em] text-balance [word-spacing:.025em] sm:mt-6 sm:text-[clamp(3.35rem,6.5vw,4.5rem)] lg:text-[clamp(3.35rem,5.72vw,6rem)]">Iz vašega <span class="sr-only text-(--deep) motion-reduce:not-sr-only">Booking.com/<wbr />Airbnb</span><span class="inline-grid text-(--deep) motion-reduce:hidden"><span aria-hidden="true" class="col-start-1 row-start-1 animate-roll will-change-transform">Booking.com</span><span aria-hidden="true" class="col-start-1 row-start-1 animate-roll opacity-0 will-change-transform [animation-delay:-3s]">Airbnb</span></span> oglasa do spletne strani <span class="block"><span class="relative isolate -mx-[.1em] inline-block before:absolute before:inset-0 before:-z-10 before:origin-left before:animate-highlight before:rounded-[.12em] before:bg-(--deep) motion-reduce:before:animate-none"><span class="-my-[.1em] inline-block bg-[linear-gradient(to_right,var(--accent)_50%,var(--ink)_50%)] bg-size-[200%_100%] bg-left bg-clip-text px-[.1em] py-[.1em] text-transparent animate-highlight-text motion-reduce:animate-none">po meri.</span></span></span></h1>
           <p class="mt-5 max-w-[45ch] text-base leading-[1.6] text-(--muted) sm:mt-6 sm:text-lg">Pošljete nam povezavo do oglasa, mi pa pripravimo spletno stran za vašo nastanitev v štirih jezikih. Oglas obdržite, gostje pa vam lahko pišejo tudi neposredno.</p>
           <div class="mt-5 flex flex-wrap items-center gap-x-6 sm:mt-8">
             <a href="#stik" class={button}>Pošljite povezavo do oglasa</a>
@@ -122,6 +122,9 @@ const questions = [
 
         <figure data-carousel aria-roledescription="carousel" aria-label="Izbrane spletne strani" class="group/carousel min-w-0">
           <div class="relative isolate aspect-[1.13] overflow-hidden rounded-[1.4rem] bg-(--stage) sm:aspect-[1.2] sm:rounded-[2rem]">
+            <svg class="pointer-events-none absolute -top-8 -right-8 -z-10 h-[70%] w-auto max-w-[75%] rotate-180 text-(--tone)/30" viewBox="0 0 560 360" fill="none" aria-hidden="true">
+              <path d="M142 360V127L508 23v337M109 360V152L475 48v312M76 360V177L442 73v287M43 360V202L409 98v262" stroke="currentColor" stroke-width="1.5" />
+            </svg>
             {featured.map(({ name, id, place, desktop, mobile, alt }, i) => (
               <a href={`#${id}`} data-slide data-active={i === 0 ? '' : undefined} inert={i !== 0} aria-label={`Projekt ${name}`} class="group absolute inset-0 opacity-0 transition-opacity duration-500 data-active:opacity-100 motion-reduce:transition-none">
                 <div class={`absolute top-[14%] left-[6%] w-[81%] ${enter} translate-y-8 scale-[.96]`}>
@@ -369,10 +372,10 @@ const questions = [
           <div class="min-w-0">
             <form data-izba-form action="/api/izba" method="post" class="grid gap-5 rounded-[1.25rem] bg-(--paper) p-5 shadow-[0_20px_50px_#17241b1f] sm:rounded-[1.6rem] sm:p-8">
               <div>
-                <label for="povezava-1" class="font-semibold">Povezava do oglasa</label>
+                <label for="povezava-1" class="font-semibold">Povezava do oglasa <span class="font-normal text-(--muted)">(neobvezno)</span></label>
                 <p id="povezava-namig" class="mt-0.5 text-sm text-(--muted)">Booking ali Airbnb. Kopirajte jo iz brskalnika.</p>
                 <div data-links class="mt-2 grid gap-2">
-                  <input id="povezava-1" name="povezava" type="text" inputmode="url" autocomplete="url" required placeholder="https://www.booking.com/hotel/si/…" aria-describedby="povezava-namig povezava-napaka" class="w-full min-h-12 rounded-xl border border-(--ink)/25 bg-white px-4 py-3 text-base text-(--ink) placeholder:text-(--muted)/70 hover:border-(--ink)/50 focus:border-(--ink) focus:outline-2 focus:outline-offset-1 focus:outline-(--tone) aria-invalid:border-red-700" />
+                  <input id="povezava-1" name="povezava" type="text" inputmode="url" autocomplete="url" placeholder="https://www.booking.com/hotel/si/…" aria-describedby="povezava-namig povezava-napaka" class="w-full min-h-12 rounded-xl border border-(--ink)/25 bg-white px-4 py-3 text-base text-(--ink) placeholder:text-(--muted)/70 hover:border-(--ink)/50 focus:border-(--ink) focus:outline-2 focus:outline-offset-1 focus:outline-(--tone) aria-invalid:border-red-700" />
                 </div>
                 <button type="button" data-add-link hidden class="mt-2 inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold underline decoration-(--line) underline-offset-4 hover:decoration-current">+ Dodaj še eno povezavo</button>
                 <p id="povezava-napaka" data-error="povezava" class="mt-1 text-sm font-medium text-red-800 empty:hidden"></p>
@@ -403,7 +406,7 @@ const questions = [
 
               <div>
                 <label for="sporocilo" class="font-semibold">Kaj naj še vemo? <span class="font-normal text-(--muted)">(neobvezno)</span></label>
-                <textarea id="sporocilo" name="sporocilo" rows="3" placeholder="Npr. kaj gostje pri vas najbolj cenijo ali kdaj bi stran potrebovali." class="w-full min-h-12 rounded-xl border border-(--ink)/25 bg-white px-4 py-3 text-base text-(--ink) placeholder:text-(--muted)/70 hover:border-(--ink)/50 focus:border-(--ink) focus:outline-2 focus:outline-offset-1 focus:outline-(--tone) aria-invalid:border-red-700 mt-2 resize-y"></textarea>
+                <textarea id="sporocilo" name="sporocilo" rows="3" class="w-full min-h-12 rounded-xl border border-(--ink)/25 bg-white px-4 py-3 text-base text-(--ink) placeholder:text-(--muted)/70 hover:border-(--ink)/50 focus:border-(--ink) focus:outline-2 focus:outline-offset-1 focus:outline-(--tone) aria-invalid:border-red-700 mt-2 resize-y"></textarea>
               </div>
 
               <div class="sr-only" aria-hidden="true">
@@ -413,7 +416,7 @@ const questions = [
 
               <div>
                 <button type="submit" class={`${button} w-full disabled:opacity-60 sm:w-fit`}>Pošljite za brezplačen predogled</button>
-                <p class="mt-3 text-sm leading-relaxed text-(--muted)">Podatke uporabimo samo za predogled in odgovor. Na nič vas ne veže.</p>
+                <p class="mt-3 text-sm leading-relaxed text-(--muted)">Podatke uporabimo samo za predogled in odgovor.</p>
                 <p data-status role="alert" class="mt-3 text-sm font-medium text-red-800 empty:hidden"></p>
               </div>
             </form>
@@ -494,7 +497,6 @@ const questions = [
       const first = links.querySelector('input')!;
       const input = first.cloneNode() as HTMLInputElement;
       input.id = `povezava-${links.children.length + 1}`;
-      input.required = false;
       input.value = '';
       input.setAttribute('aria-label', `Povezava ${links.children.length + 1}`);
       links.append(input);

@@ -9,10 +9,19 @@ const form = (entries) => {
   return data;
 };
 
-test('Requires a listing link and a valid email', () => {
+test('Requires a valid email', () => {
   const result = parseSubmission(form([['povezava', ''], ['email', 'nope']]));
   assert.equal(result.ok, false);
-  assert.deepEqual(Object.keys(result.errors).sort(), ['email', 'povezava']);
+  assert.deepEqual(Object.keys(result.errors), ['email']);
+});
+
+test('Accepts a submission without a link', () => {
+  const result = parseSubmission(form([['povezava', ''], ['email', 'gost@example.com']]));
+  assert.equal(result.ok, true);
+  assert.deepEqual(result.data.links, []);
+  const mail = buildEmail(result.data);
+  assert.equal(mail.subject, 'Izba: nov predogled (gost@example.com)');
+  assert.match(mail.text, /Povezave:\n—/);
 });
 
 test('Accepts links without https, ignores empty extra links', () => {

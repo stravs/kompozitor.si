@@ -29,8 +29,7 @@ export function parseSubmission(form: FormData): Parsed {
   const errors: Record<string, string> = {};
   const raw = form.getAll('povezava').map((v) => String(v).trim()).filter(Boolean).slice(0, 5);
   const links = raw.map((v) => normalizeLink(v.slice(0, 500)));
-  if (!raw.length) errors.povezava = 'Vpišite povezavo do oglasa.';
-  else if (links.includes(null)) errors.povezava = 'Povezava ni veljavna. Prilepite jo iz brskalnika.';
+  if (links.includes(null)) errors.povezava = 'Povezava ni veljavna. Prilepite jo iz brskalnika.';
 
   const email = text(form, 'email', 200);
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = 'Vpišite veljaven e-naslov.';
@@ -53,9 +52,9 @@ export function parseSubmission(form: FormData): Parsed {
 
 export function buildEmail(data: Submission) {
   const units = data.units === '6' ? '6 ali več' : data.units || '—';
-  const host = new URL(data.links[0]).hostname.replace(/^www\./, '');
+  const from = data.links.length ? new URL(data.links[0]).hostname.replace(/^www\./, '') : data.email;
   return {
-    subject: `Izba: nov predogled (${host})`,
+    subject: `Izba: nov predogled (${from})`,
     text: [
       'Nova prijava za brezplačen predogled.',
       '',
@@ -65,7 +64,7 @@ export function buildEmail(data: Submission) {
       `Število enot: ${units}`,
       '',
       'Povezave:',
-      ...data.links.map((link) => `- ${link}`),
+      ...(data.links.length ? data.links.map((link) => `- ${link}`) : ['—']),
       '',
       'Sporočilo:',
       data.message || '—',
