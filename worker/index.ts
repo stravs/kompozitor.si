@@ -9,6 +9,7 @@ interface Env {
 
 const FROM = { email: 'izba@kompozitor.si', name: 'Izba' };
 const TO = 'anze@kompozitor.si';
+const IZBA_HOST = 'izba.kompozitor.si';
 
 function reply(request: Request, status: number, body: Record<string, unknown>) {
   if (request.headers.get('Accept')?.includes('application/json')) return Response.json(body, { status });
@@ -16,8 +17,9 @@ function reply(request: Request, status: number, body: Record<string, unknown>) 
   const message = status === 200
     ? 'Hvala! Prejeli smo vašo nastanitev. Predogled vam pošljemo v 3 delovnih dneh.'
     : `Pošiljanje ni uspelo. Pišite nam na ${TO}.`;
+  const home = new URL(request.url).hostname === IZBA_HOST ? '/' : '/izba/';
   return new Response(
-    `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Izba</title><p>${message}</p><p><a href="/izba/">Nazaj na Izbo</a></p>`,
+    `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Izba</title><p>${message}</p><p><a href="${home}">Nazaj na Izbo</a></p>`,
     { status, headers: { 'Content-Type': 'text/html; charset=utf-8' } },
   );
 }
@@ -44,11 +46,21 @@ async function handleIzba(request: Request, env: Env) {
 
 export default {
   async fetch(request: Request, env: Env) {
-    const { pathname } = new URL(request.url);
-    if (pathname === '/api/izba') {
+    const url = new URL(request.url);
+    if (url.pathname === '/api/izba') {
       if (request.method !== 'POST') return new Response('Method Not Allowed', { status: 405, headers: { Allow: 'POST' } });
       return handleIzba(request, env);
     }
-    return env.ASSETS.fetch(request);
+    if (url.hostname !== IZBA_HOST) return env.ASSETS.fetch(request);
+
+    if (url.pathname === '/') {
+      url.pathname = '/izba/';
+      return env.ASSETS.fetch(new Request(url, request));
+    }
+    if (['/izba', '/izba/', '/izba/index.html', '/index.html'].includes(url.pathname)) {
+      url.pathname = '/';
+      return Response.redirect(url, 308);
+    }
+    return new Response('Not Found', { status: 404, headers: { 'X-Robots-Tag': 'noindex, follow' } });
   },
 };

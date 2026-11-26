@@ -10,6 +10,7 @@ test('Research proposal is a coherent, honest sales preview', () => {
   const heading = html.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/)?.[1].replace(/<span aria-hidden="true"[^>]*>[^<]*<\/span>/g, '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
   assert.equal(heading, 'Iz vašega Booking.com/Airbnb oglasa do spletne strani po meri.');
   assert.match(html, /content="noindex,follow"/);
+  assert.match(html, /rel="canonical" href="https:\/\/izba\.kompozitor\.si\/"/);
   assert.ok(!html.includes('Primerjava prototipov'));
   const sections = ['primer', 'postopek', 'ponudba', 'cene', 'vzdrzevanje', 'vprasanja', 'stik'];
   const positions = sections.map(id => html.indexOf(`id="${id}"`));
@@ -21,8 +22,8 @@ test('Research proposal is a coherent, honest sales preview', () => {
   assert.deepEqual([...calc.matchAll(/<input\b[^>]*type="radio"[^>]*value="(\d+)"/g)].map(([, v]) => v), ['1', '2', '3', '4', '5', '6']);
   assert.match(calc, /value="1"[^>]*checked/);
   assert.match(calc, /data-out="setup"[^>]*>349 €</);
-  assert.match(calc, /data-out="first"[^>]*>409 €</);
-  assert.match(calc, />60 € \/ leto</);
+  assert.match(calc, /data-out="first"[^>]*>409 €<\/span> \+ domena/);
+  assert.match(calc, /Od drugega leta, letno<\/dt><dd[^>]*>60 € \+ domena</);
   assert.doesNotMatch(html, /90 €\/leto|60 ali 90 €/);
   const contact = html.match(/<section\b[^>]*id="stik"[^>]*>([\s\S]*?)<\/section>/)?.[1] ?? '';
   const form = contact.match(/<form\b[^>]*>/)?.[0] ?? '';

@@ -1,5 +1,7 @@
 # Izba · cene: raziskava trga in predlog strukture
 
+> Arhivski pregled. Za preverjene podatke, vključno s popravkom glede gostovanja pri DATA.si in cenami SnapGuest PRO, glej [novejšo tržno raziskavo](izba-trzna-raziskava.md).
+
 Pregled javnih cenikov: 24. 11. 2026. Cene so kot na straneh ponudnikov; nekatere strani DDV ne omenjajo. SnapGuest PRO cenika ni bilo mogoče prebrati (stran se izriše šele v brskalniku).
 
 ## Trg

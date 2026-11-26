@@ -55,15 +55,10 @@ const process = [
   ['Skupaj', 'Potrdimo in objavimo', 'Pogledate stran in nam v enem sporočilu poveste, kaj bi spremenili. Ko ste zadovoljni in je plačano, je stran v 3 delovnih dneh na spletu.'],
 ];
 const included = [
-  { id: 'nasveti', title: 'Nasveti za vaš oglas', body: 'Preberemo vaš oglas in mnenja gostov ter vam povemo, kako lahko nastanitev predstavite še bolje. Najboljše pohvale gostov postavimo na stran.', image: reviewsShot, alt: 'Del strani Apartments Olga z oceno 9,1 na Bookingu in tremi mnenji gostov' },
+  { id: 'nasveti', title: 'Nasveti za vaš oglas', body: 'Preberemo vaš oglas in mnenja gostov, opozorimo na morebitna neskladja v opisu ter vam povemo, kako lahko nastanitev predstavite še bolje. Po želji izbrane pohvale postavimo na stran.', image: reviewsShot, alt: 'Del strani Apartments Olga z oceno 9,1 na Bookingu in tremi mnenji gostov' },
   { id: 'fotografije', title: 'Besedila in fotografije', body: 'Uredimo opise ter izberemo in razvrstimo fotografije. Po potrebi jih malo posvetlimo ali poravnamo. Novega fotografiranja ni.', image: photosShot, alt: 'Del strani InGreen: fotografije vrta in bazena, urejene v galerijo s kratkimi opisi' },
   { id: 'stran', title: 'Vaša spletna stran', body: 'Oblikovana posebej za vas, v slovenščini, angleščini, nemščini in italijanščini. Lepo deluje tudi na telefonu. Ima fotografije, predstavitev, zemljevid in obrazec, prek katerega vam gostje pišejo.' },
-  { id: 'iskalniki', title: 'Da vas najdejo', body: 'Stran pripravimo tako, da jo hitro najdejo iskalniki (Google, Bing) in AI pomočniki (ChatGPT, Gemini). Povežemo jo tudi z vašim profilom na Googlu (Google Business).' },
-];
-const compare = [
-  ['Izba', `${euro(pricing.base)} enkratno + ${euro(pricing.yearly)} na leto`, 'Vse naredimo mi, v štirih jezikih.'],
-  ['Agencija', 'od približno 730 € z DDV', 'Gostovanje in dodatni jeziki pogosto posebej.'],
-  ['Sami, npr. z Wixom', '100–200 € na leto', 'Stran naredite sami, v svojem času.'],
+  { id: 'iskalniki', title: 'Da vas najdejo', body: 'Stran pripravimo tako, da jo hitro najdejo iskalniki (Google, Bing) in AI pomočniki (ChatGPT, Gemini).' },
 ];
 const maintenance = [
   ['Manjše spremembe', 'Zamenjamo fotografijo, popravimo besedilo, posodobimo ceno ali uredimo drugo malenkost. V razumnem obsegu brez doplačila.'],
@@ -91,6 +86,7 @@ const questions = [
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,follow" />
+    <link rel="canonical" href="https://izba.kompozitor.si/" />
     <meta name="description" content="Iz vašega Booking.com/Airbnb oglasa do spletne strani po meri. Izba uredi vsebino in izdela lastno stran za apartma ali manjšo nastanitev. Storitev studia Kompozitor." />
     <link rel="icon" href="/izba-mark.svg" type="image/svg+xml" />
     <title>Izba — Spletne strani za apartmaje in manjše nastanitve</title>
@@ -99,7 +95,7 @@ const questions = [
     <a href="#vsebina" class="sr-only z-50 bg-(--deep) font-semibold text-(--accent) focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:rounded-xl focus:px-4 focus:py-3">Preskoči na vsebino</a>
     <header class={shell}>
       <div class="flex min-h-17 flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-(--line) py-2.5 sm:min-h-20">
-        <a href="/izba/" aria-label="Izba – naslovna stran" class="inline-flex min-h-11 items-center gap-2.5 text-[2rem] leading-none font-bold tracking-[-.075em] sm:text-[2.2rem]">
+        <a href="./" aria-label="Izba – naslovna stran" class="inline-flex min-h-11 items-center gap-2.5 text-[2rem] leading-none font-bold tracking-[-.075em] sm:text-[2.2rem]">
           <span class="grid size-8 place-items-center rounded-lg bg-(--deep) text-(--accent) sm:size-9"><svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 29V3h26v26h-3V6H6v23H3Zm4-22 11 3.5v15L7 29V7Z" /></svg></span>
           izba
         </a>
@@ -116,7 +112,7 @@ const questions = [
         <div>
           <p class="flex items-baseline gap-2.5 text-sm font-medium text-(--muted)"><span class="size-2 shrink-0 rounded-full bg-(--tone)" aria-hidden="true"></span>Spletne strani za apartmaje in manjše nastanitve</p>
           <h1 class="mt-4 max-w-[15ch] text-[clamp(2.35rem,11vw,3.55rem)] leading-[.96] font-semibold tracking-[-.052em] text-balance [word-spacing:.025em] sm:mt-6 sm:text-[clamp(3.35rem,6.5vw,4.5rem)] lg:text-[clamp(3.35rem,5.72vw,6rem)]">Iz vašega <span class="sr-only text-(--tone) motion-reduce:not-sr-only">Booking.com/<wbr />Airbnb</span><span class="inline-grid text-(--tone) motion-reduce:hidden"><span aria-hidden="true" class="col-start-1 row-start-1 animate-roll will-change-transform">Booking.com</span><span aria-hidden="true" class="col-start-1 row-start-1 animate-roll opacity-0 will-change-transform [animation-delay:-3s]">Airbnb</span></span> oglasa do spletne strani <span class="block"><span class="relative isolate -mx-[.1em] inline-block before:absolute before:inset-0 before:-z-10 before:origin-left before:animate-highlight before:rounded-[.12em] before:bg-(--deep) motion-reduce:before:animate-none"><span class="-my-[.1em] inline-block bg-[linear-gradient(to_right,var(--accent)_50%,var(--ink)_50%)] bg-size-[200%_100%] bg-left bg-clip-text px-[.1em] py-[.1em] text-transparent animate-highlight-text motion-reduce:animate-none">po meri.</span></span></span></h1>
-          <p class="mt-5 max-w-[45ch] text-base leading-[1.6] text-(--muted) sm:mt-6 sm:text-lg">Pošljete nam svoj oglas, mi pa iz njega naredimo lepo stran za vašo nastanitev. Booking ostane, gostje pa vam lahko pišejo tudi neposredno.</p>
+          <p class="mt-5 max-w-[45ch] text-base leading-[1.6] text-(--muted) sm:mt-6 sm:text-lg">Pošljete nam povezavo do oglasa, mi pa pripravimo spletno stran za vašo nastanitev v štirih jezikih. Oglas obdržite, gostje pa vam lahko pišejo tudi neposredno.</p>
           <div class="mt-5 flex flex-wrap items-center gap-x-6 sm:mt-8">
             <a href="#stik" class={button}>Pošljite povezavo do oglasa</a>
             <a href="#primer" class="inline-flex min-h-11 items-center text-sm font-semibold underline decoration-(--line) underline-offset-4 hover:decoration-current">Poglejte primere</a>
@@ -270,20 +266,6 @@ const questions = [
             </li>
           ))}
         </ol>
-
-        <div class="mt-14 rounded-[1.5rem] bg-(--field) p-5 sm:mt-18 sm:rounded-[2rem] sm:p-8 lg:p-10">
-          <h3 class="text-2xl font-semibold tracking-[-.04em] sm:text-3xl">Koliko bi stalo drugje?</h3>
-          <dl class="mt-5 grid divide-y divide-(--line) border-y border-(--line) md:grid-cols-3 md:divide-x md:divide-y-0 md:border-y-0">
-            {compare.map(([who, price, note], i) => (
-              <div class="py-4 md:px-6 md:py-1 md:first:pl-0 md:last:pr-0">
-                <dt class:list={['text-sm font-semibold', i === 0 ? 'text-(--tone)' : 'text-(--muted)']}>{who}</dt>
-                <dd class:list={['mt-1 text-xl font-semibold tracking-tight tabular-nums', i !== 0 && 'text-(--muted)']}>{price}</dd>
-                <dd class="mt-1 text-sm leading-relaxed text-(--muted)">{note}</dd>
-              </div>
-            ))}
-          </dl>
-          <p class="mt-4 text-xs leading-relaxed text-(--muted)">Po javnih cenikih ponudnikov, november 2026.</p>
-        </div>
       </section>
 
       <section id="cene" class="scroll-mt-6 bg-(--deep) text-(--paper)">
@@ -315,8 +297,8 @@ const questions = [
               <p class="mt-1 flex flex-wrap items-baseline gap-x-3"><output data-out="setup" class="text-[clamp(3rem,8vw,4.5rem)] leading-none font-semibold tracking-[-.05em] text-(--accent) tabular-nums">{euro(pricing.base)}</output><span data-out="formula" class="text-sm text-(--on-deep)">ena enota · vsaka naslednja +{euro(pricing.perUnit)}</span></p>
               <p data-quote hidden class="mt-3 max-w-[40ch] text-sm leading-relaxed text-(--on-deep)">Pri večjih nastanitvah ceno določimo po pregledu gradiva. Pošljite povezavo in pripravimo ponudbo.</p>
               <dl data-priced class="mt-6 divide-y divide-white/20 border-y border-white/20 text-sm sm:text-base">
-                <div class="flex justify-between gap-4 py-3"><dt class="text-(--on-deep)">Letna skrb za stran</dt><dd class="font-semibold tabular-nums">{euro(pricing.yearly)} / leto</dd></div>
-                <div class="flex justify-between gap-4 py-3"><dt class="text-(--on-deep)">Prvo leto, plačilo ob objavi</dt><dd class="text-right font-semibold tabular-nums"><span data-out="first">{euro(pricing.base + pricing.yearly)}</span> + domena</dd></div>
+                <div class="flex justify-between gap-4 py-3"><dt class="font-semibold">Prvo leto, plačilo ob objavi</dt><dd class="text-right font-semibold tabular-nums"><span data-out="first">{euro(pricing.base + pricing.yearly)}</span> + domena</dd></div>
+                <div class="flex justify-between gap-4 py-3"><dt class="text-(--on-deep)">Od drugega leta, letno</dt><dd class="text-right font-semibold tabular-nums">{euro(pricing.yearly)} + domena</dd></div>
               </dl>
               <p class="mt-4 text-sm leading-relaxed text-(--on-deep)">Vključeno: štirje jeziki (slovenščina, angleščina, nemščina, italijanščina), obrazec za sporočila gostov, priprava za iskalnike in AI pomočnike ter en krog popravkov.</p>
             </div>
@@ -449,7 +431,7 @@ const questions = [
     </main>
 
     <footer class={`${shell} flex flex-wrap justify-between gap-x-5 gap-y-2 py-7 text-sm leading-relaxed text-(--muted) sm:py-9`}>
-      <p>Izba · storitev studia <a href="/" class="font-semibold underline underline-offset-4">Kompozitor</a></p>
+      <p>Izba · storitev studia <a href="https://kompozitor.si/" class="font-semibold underline underline-offset-4">Kompozitor</a></p>
       <p>{owner} · <a href={tel} class="underline underline-offset-4">{phone}</a> · <a href={`mailto:${inbox}`} class="underline underline-offset-4">{inbox}</a></p>
     </footer>
 
