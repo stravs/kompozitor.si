@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { parseSubmission, buildEmail } from '../worker/izba-form.ts';
+import worker from '../worker/index.ts';
 
 const form = (entries) => {
   const data = new FormData();
@@ -41,4 +42,25 @@ test('Flags the hidden honeypot field as spam', () => {
   const result = parseSubmission(form([['povezava', 'booking.com/x'], ['email', 'a@b.si'], ['spletna_stran', 'http://spam']]));
   assert.equal(result.ok, true);
   assert.equal(result.spam, true);
+});
+
+test('Logs the email failure code without exposing it to the visitor', async (t) => {
+  const log = t.mock.method(console, 'error', () => {});
+  const request = new Request('https://izba.kompozitor.si/api/izba', {
+    method: 'POST',
+    headers: { Accept: 'application/json' },
+    body: form([['povezava', 'booking.com/x'], ['email', 'gost@example.com']]),
+  });
+  const response = await worker.fetch(request, {
+    EMAIL: {
+      async send() {
+        throw Object.assign(new Error('Delivery error for gost@example.com'), { code: 'E_SENDER_DOMAIN_NOT_CONFIGURED' });
+      },
+    },
+  });
+  assert.equal(response.status, 502);
+  assert.deepEqual(await response.json(), { ok: false });
+  assert.deepEqual(log.mock.calls.map(({ arguments: args }) => args), [
+    ['Izba form: sending failed (E_SENDER_DOMAIN_NOT_CONFIGURED)'],
+  ]);
 });

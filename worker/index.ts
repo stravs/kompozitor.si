@@ -1,4 +1,4 @@
-import { buildEmail, parseSubmission } from './izba-form';
+import { buildEmail, parseSubmission } from './izba-form.ts';
 
 interface Env {
   ASSETS: { fetch(request: Request): Promise<Response> };
@@ -38,7 +38,11 @@ async function handleIzba(request: Request, env: Env) {
   try {
     await env.EMAIL.send({ from: FROM, to: TO, replyTo: parsed.data.email, ...buildEmail(parsed.data) });
   } catch (error) {
-    console.error('Izba form: sending failed', error);
+    const code = typeof error === 'object' && error !== null && 'code' in error ? error.code : undefined;
+    const reason = typeof code === 'string' && /^E_[A-Z0-9_]+$/.test(code)
+      ? code
+      : error instanceof TypeError ? 'TypeError' : 'unknown';
+    console.error(`Izba form: sending failed (${reason})`);
     return reply(request, 502, { ok: false });
   }
   return reply(request, 200, { ok: true });
