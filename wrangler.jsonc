@@ -1,5 +1,5 @@
 {
-  "name": "kompozitor-prototipi",
+  "name": "kompozitor-si",
   "compatibility_date": "2026-10-01",
   "main": "worker/index.ts",
   "assets": {
