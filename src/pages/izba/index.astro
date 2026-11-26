@@ -1,7 +1,9 @@
 ---
 import '../../styles/global.css';
 import '@fontsource-variable/instrument-sans';
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
+import fontLatin from '@fontsource-variable/instrument-sans/files/instrument-sans-latin-wght-normal.woff2?url';
+import fontLatinExt from '@fontsource-variable/instrument-sans/files/instrument-sans-latin-ext-wght-normal.woff2?url';
 import nook from '../../assets/projects/nook-full-desktop.webp';
 import nookMobile from '../../assets/projects/nook-full-mobile.webp';
 import olga from '../../assets/projects/olga-full-desktop.webp';
@@ -24,6 +26,20 @@ const label = 'text-sm font-semibold tracking-[-.015em]';
 const buttonBase = 'inline-flex min-h-14 w-fit items-center justify-center rounded-full px-6 py-2 text-sm font-semibold motion-safe:transition-colors';
 const button = `${buttonBase} bg-(--deep) text-(--accent) hover:bg-(--ink)`;
 const buttonOnDark = `${buttonBase} bg-(--accent) text-(--ink) hover:bg-(--accent-hover)`;
+const origin = 'https://izba.kompozitor.si';
+const title = 'Izba — Spletne strani za apartmaje in manjše nastanitve';
+const description = 'Iz vašega Booking.com/Airbnb oglasa do spletne strani po meri. Izba uredi vsebino in izdela lastno stran za apartma ali manjšo nastanitev. Storitev studia Kompozitor.';
+// Link preview for WhatsApp, Facebook, Viber… (1.9:1, the common card shape).
+const social = await getImage({ src: ingreenDesktop, width: 1100, height: 578, fit: 'cover', position: 'top', format: 'jpg' });
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Izba',
+  serviceType: 'Izdelava spletnih strani za apartmaje in manjše nastanitve',
+  url: `${origin}/`,
+  areaServed: { '@type': 'Country', name: 'Slovenija' },
+  provider: { '@type': 'Organization', name: 'Kompozitor', url: 'https://kompozitor.si/', email: inbox, telephone: tel.slice(4) },
+};
 const nookUrl = 'https://nature-nook.si/';
 const ingreenUrl = 'https://ingreen-house.si/';
 const olgaUrl = 'https://apartments-olga.si/';
@@ -86,11 +102,25 @@ const questions = [
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="robots" content="noindex,follow" />
-    <link rel="canonical" href="https://izba.kompozitor.si/" />
-    <meta name="description" content="Iz vašega Booking.com/Airbnb oglasa do spletne strani po meri. Izba uredi vsebino in izdela lastno stran za apartma ali manjšo nastanitev. Storitev studia Kompozitor." />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={`${origin}/`} />
     <link rel="icon" href="/izba-mark.svg" type="image/svg+xml" />
-    <title>Izba — Spletne strani za apartmaje in manjše nastanitve</title>
+    <meta name="theme-color" content="#f7f7f0" />
+    <link rel="preload" href={fontLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={fontLatinExt} as="font" type="font/woff2" crossorigin />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="sl_SI" />
+    <meta property="og:site_name" content="Izba" />
+    <meta property="og:url" content={`${origin}/`} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(social.src, origin).href} />
+    <meta property="og:image:width" content={String(social.attributes.width)} />
+    <meta property="og:image:height" content={String(social.attributes.height)} />
+    <meta property="og:image:alt" content="Naslovna stran InGreen, izdelana z Izbo" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
   </head>
   <body data-izba-palette class="bg-(--paper) font-['Instrument_Sans_Variable',system-ui,sans-serif] text-(--ink) antialiased selection:bg-(--deep) selection:text-(--accent) [&_a]:focus-visible:outline-2 [&_a]:outline-offset-4 [&_summary]:focus-visible:outline-2 [&_summary]:outline-offset-4">
     <a href="#vsebina" class="sr-only z-50 bg-(--deep) font-semibold text-(--accent) focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:rounded-xl focus:px-4 focus:py-3">Preskoči na vsebino</a>
@@ -175,7 +205,7 @@ const questions = [
                       <span class="min-w-0 flex-1 truncate rounded-full bg-(--field) px-3 py-0.5 text-center text-[.65rem] text-(--muted) sm:py-1 sm:text-xs">{new URL(href).hostname}</span>
                     </div>
                     <div role="region" tabindex="0" aria-label={`Računalniški predogled: ${name}`} class="aspect-[16/10] overflow-x-hidden overflow-y-auto overscroll-contain pointer-coarse:overscroll-auto [scrollbar-width:thin] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-(--tone)">
-                      <Image src={image} {alt} widths={[480, 720, 960, 1280]} sizes="(min-width: 1536px) 820px, (min-width: 1024px) 52vw, (min-width: 640px) 68vw, 86vw" loading="lazy" class="block h-auto w-full" />
+                      <Image src={image} {alt} widths={[480, 720, 960, 1280]} sizes="(min-width: 1536px) 820px, (min-width: 1024px) 52vw, (min-width: 640px) 68vw, (min-resolution: 2.5dppx) 240px, 86vw" loading="lazy" class="block h-auto w-full" />
                     </div>
                   </div>
                   <div class="flex aspect-[9/17] w-[58%] flex-col justify-self-center overflow-hidden rounded-[1.2rem] border-4 border-(--ink) bg-(--ink) shadow-[0_12px_25px_#101a1340] sm:aspect-auto sm:w-auto sm:justify-self-stretch sm:rounded-[1.4rem] sm:border-[5px] sm:[contain:size]">
@@ -231,11 +261,11 @@ const questions = [
             <li>
               <div class="relative aspect-[4/3] overflow-hidden rounded-[1.4rem] bg-(--stage) sm:rounded-[2rem]">
                 {image && (
-                  <Image src={image} alt={alt} widths={[480, 720, 960, 1280]} sizes="(min-width: 1536px) 660px, (min-width: 768px) 44vw, 88vw" loading="lazy" class="absolute top-[9%] left-[7%] w-[86%] rounded-lg shadow-[0_20px_40px_#101a1326] sm:rounded-xl" />
+                  <Image src={image} alt={alt} widths={[480, 720, 960, 1280]} sizes="(min-width: 1536px) 570px, (min-width: 768px) 38vw, 76vw" loading="lazy" class="absolute top-[9%] left-[7%] w-[86%] rounded-lg shadow-[0_20px_40px_#101a1326] sm:rounded-xl" />
                 )}
                 {id === 'stran' && (
                   <Fragment>
-                    <Image src={siteDesktop} alt="Naslovna stran Apartments Olga na računalniku" widths={[480, 720, 960, 1280]} sizes="(min-width: 1536px) 560px, (min-width: 768px) 38vw, 74vw" loading="lazy" class="absolute top-[16%] left-[6%] w-[74%] rounded-lg shadow-[0_20px_40px_#101a1326] sm:rounded-xl" />
+                    <Image src={siteDesktop} alt="Naslovna stran Apartments Olga na računalniku" widths={[480, 720, 960, 1280]} sizes="(min-width: 1536px) 500px, (min-width: 768px) 32vw, 67vw" loading="lazy" class="absolute top-[16%] left-[6%] w-[74%] rounded-lg shadow-[0_20px_40px_#101a1326] sm:rounded-xl" />
                     <Image src={siteMobile} alt="Ista stran na telefonu" widths={[180, 240, 390]} sizes="(min-width: 1536px) 170px, (min-width: 768px) 12vw, 24vw" loading="lazy" class="absolute top-[26%] right-[7%] w-[24%] rounded-[.6rem] border-[3px] border-(--ink) shadow-[0_14px_28px_#101a1340] sm:rounded-[1rem] sm:border-4" />
                   </Fragment>
                 )}
@@ -558,11 +588,28 @@ const questions = [
       const progress = range > 0 ? Math.min(1, Math.max(0, leader.scrollTop / range)) : 0;
       follower.scrollTop = progress * (follower.scrollHeight - follower.clientHeight);
     };
+    // Phones send scroll events unevenly during a swipe and its momentum, so
+    // once scrolling starts, follow every frame until the leader settles.
+    let tracking = false;
+    const track = () => {
+      if (tracking) return;
+      tracking = true;
+      let last = NaN;
+      let still = 0;
+      const frame = () => {
+        follow();
+        still = leader.scrollTop === last ? still + 1 : 0;
+        last = leader.scrollTop;
+        if (still < 10) requestAnimationFrame(frame);
+        else tracking = false;
+      };
+      requestAnimationFrame(frame);
+    };
     for (const pane of panes) {
       for (const type of ['wheel', 'touchstart', 'pointerdown', 'keydown'] as const) {
         pane.addEventListener(type, () => { leader = pane; }, { passive: true });
       }
-      pane.addEventListener('scroll', () => { if (pane === leader) follow(); }, { passive: true });
+      pane.addEventListener('scroll', () => { if (pane === leader) track(); }, { passive: true });
     }
     // Keep them aligned when the layout changes size (rotation, resize, image load).
     const resized = new ResizeObserver(follow);

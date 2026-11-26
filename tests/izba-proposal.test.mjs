@@ -9,7 +9,7 @@ test('Research proposal is a coherent, honest sales preview', () => {
   assert.equal((html.match(/<h1\b/g) ?? []).length, 1);
   const heading = html.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/)?.[1].replace(/<span aria-hidden="true"[^>]*>[^<]*<\/span>/g, '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
   assert.equal(heading, 'Iz vašega Booking.com/Airbnb oglasa do spletne strani po meri.');
-  assert.match(html, /content="noindex,follow"/);
+  assert.doesNotMatch(html, /noindex/, 'Izba is live in search');
   assert.match(html, /rel="canonical" href="https:\/\/izba\.kompozitor\.si\/"/);
   assert.ok(!html.includes('Primerjava prototipov'));
   const sections = ['primer', 'postopek', 'ponudba', 'cene', 'vzdrzevanje', 'vprasanja', 'stik'];
@@ -80,4 +80,23 @@ test('Selected work links to Nature Nook, Apartments Olga, and InGreen in order'
     const panes = [...cards[i].matchAll(/<div\b[^>]*role="region"[^>]*tabindex="0"[^>]*aria-label="([^"]+)"[^>]*overflow-y-auto/g)];
     assert.deepEqual(panes.map(([, label]) => label), [`Računalniški predogled: ${name}`, `Mobilni predogled: ${name}`], 'Both previews scroll');
   });
+});
+
+test('Izba head: link preview, structured data, font preload, inline CSS', () => {
+  const html = readFileSync(file, 'utf8');
+  const og = html.match(/<meta property="og:image" content="([^"]+)"/)?.[1];
+  assert.match(og ?? '', /^https:\/\/izba\.kompozitor\.si\/_astro\/[^"]+\.jpg$/);
+  assert.ok(existsSync('dist' + new URL(og).pathname), 'og:image file must be built');
+  assert.match(html, /<meta property="og:url" content="https:\/\/izba\.kompozitor\.si\/"/);
+  assert.match(html, /<meta name="twitter:card" content="summary_large_image"/);
+  const ld = JSON.parse(html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
+  assert.equal(ld['@type'], 'Service');
+  assert.equal(ld.url, 'https://izba.kompozitor.si/');
+  for (const href of html.match(/<link rel="preload" href="[^"]+" as="font"/g) ?? []) {
+    assert.ok(existsSync('dist' + href.match(/href="([^"]+)"/)[1]), href);
+  }
+  assert.equal((html.match(/as="font"/g) ?? []).length, 2);
+  assert.doesNotMatch(html, /<link rel="stylesheet"/);
+  // Only the first hero slide loads eagerly.
+  assert.equal((html.match(/fetchpriority="high"/g) ?? []).length, 1);
 });

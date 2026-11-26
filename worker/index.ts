@@ -65,7 +65,20 @@ export default {
     if (url.hostname === 'kompozitor.si' && legacyIzbaPath) {
       return Response.redirect(`https://${IZBA_HOST}/${url.search}`, 308);
     }
-    if (url.hostname !== IZBA_HOST) return env.ASSETS.fetch(request);
+    // Only Izba is public in search; the apex placeholder, prototypes and
+    // workers.dev previews stay out.
+    if (url.hostname !== IZBA_HOST) {
+      const asset = await env.ASSETS.fetch(request);
+      const response = new Response(asset.body, asset);
+      response.headers.set('X-Robots-Tag', 'noindex, follow');
+      return response;
+    }
+    if (url.pathname === '/robots.txt') {
+      return new Response(`User-agent: *\nAllow: /\n\nSitemap: https://${IZBA_HOST}/sitemap.xml\n`, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
+    }
+    if (url.pathname === '/sitemap.xml') {
+      return new Response(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://${IZBA_HOST}/</loc></url></urlset>\n`, { headers: { 'Content-Type': 'application/xml; charset=utf-8' } });
+    }
 
     if (url.pathname === '/') {
       url.pathname = '/izba/';
