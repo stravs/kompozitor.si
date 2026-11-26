@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@theme {
+  /*
+   * Hero brand names roll like faces of a box. Each face animates only its
+   * own transform and opacity (no preserve-3d, no backface-visibility), so it
+   * stays on the GPU and behaves the same in every browser. At rest the
+   * transform is an exact identity, so the text stays sharp.
+   * One face: front → rolls up and away → (hidden) jumps under → rolls up to front.
+   */
+  /* Hero carousel tab: fills while its slide is showing. */
+  --animate-progress: progress 6s linear;
+  @keyframes progress {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+
+  /* Hero "po meri." marker: sweeps in once on load, then stays. */
+  --animate-highlight: highlight .8s cubic-bezier(.65, 0, .35, 1) .5s backwards;
+  @keyframes highlight {
+    from { transform: scaleX(0); }
+  }
+  /* Text turns from ink to lime exactly where the marker has passed (same timing). */
+  --animate-highlight-text: highlight-text .8s cubic-bezier(.65, 0, .35, 1) .5s backwards;
+  @keyframes highlight-text {
+    from { background-position: 100% 0; }
+  }
+
+  --animate-roll: roll 6s cubic-bezier(.65, 0, .35, 1) infinite;
+  @keyframes roll {
+    0%, 42% { transform: perspective(8em) translateZ(-.48em) rotateX(0deg) translateZ(.48em); opacity: 1; }
+    50% { transform: perspective(8em) translateZ(-.48em) rotateX(90deg) translateZ(.48em); opacity: 0; }
+    50.01%, 92% { transform: perspective(8em) translateZ(-.48em) rotateX(-90deg) translateZ(.48em); opacity: 0; }
+    100% { transform: perspective(8em) translateZ(-.48em) rotateX(0deg) translateZ(.48em); opacity: 1; }
+  }
+}
+
+@layer base {
+  [data-izba-palette] {
+    --paper: #f7f7f0;
+    --ink: #17241b;
+    --muted: #4a584d;
+    --line: #cbd1c5;
+    --field: #e8ece0;
+    --deep: #233428;
+    --accent: #dcfa87;
+    --accent-hover: #caef62;
+    --tone: #54704e;
+    --stage: #dee9dc;
+    --on-deep: #d0dccd;
+  }
+}

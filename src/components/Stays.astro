@@ -1,0 +1,4 @@
+---
+import {stays} from '../data';
+---
+<ul class="divide-y divide-neutral-300 border-y border-neutral-300">{stays.map(([name,url])=><li><a href={url} class="flex items-center justify-between gap-2 py-3 hover:underline underline-offset-4">{name}<span aria-hidden="true">↗</span></a></li>)}</ul>

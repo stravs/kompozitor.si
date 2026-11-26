@@ -1,0 +1,5 @@
+---
+import Logo from './Logo.astro';
+import {inbox} from '../data';
+---
+<header class="flex flex-wrap items-center justify-between gap-4 border-b border-neutral-300 py-6"><a href="#vsebina"><Logo/></a><nav aria-label="Glavna navigacija" class="flex gap-4 text-sm md:gap-8"><a class="hover:underline" href="#delo">Delo</a><a class="hover:underline" href="#izba">Izba</a><a class="underline underline-offset-4" href={'mailto:'+inbox}>Kontakt ↗</a></nav></header>

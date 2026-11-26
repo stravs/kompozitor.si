@@ -1,0 +1,11 @@
+---
+import {Picture} from 'astro:assets';
+import arbor from '../assets/projects/arbor.jpg';
+import bton from '../assets/projects/bton.jpg';
+import nook from '../assets/projects/nook.jpg';
+import miska from '../assets/projects/miska.jpg';
+const images = {arbor,bton,nook,miska};
+interface Props {name: keyof typeof images; alt:string; sizes?:string; eager?:boolean; class?:string}
+const {name,alt,sizes='(min-width: 768px) 60vw, 92vw',eager=false,class:classes=''}=Astro.props;
+---
+<Picture src={images[name]} {alt} widths={[360,700,1000,1400]} {sizes} formats={['webp']} fallbackFormat="jpg" loading={eager?'eager':'lazy'} fetchpriority={eager?'high':'auto'} class={'block w-full h-auto '+classes}/>

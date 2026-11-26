@@ -1,0 +1,17 @@
+{
+  "name": "kompozitor-prototipi",
+  "compatibility_date": "2026-10-01",
+  "main": "worker/index.ts",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "html_handling": "force-trailing-slash",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*"]
+  },
+  // Izba form → anze@kompozitor.si. Needs kompozitor.si onboarded to Cloudflare Email Service
+  // and anze@kompozitor.si verified as a destination address.
+  "send_email": [
+    { "name": "EMAIL", "destination_address": "anze@kompozitor.si", "allowed_sender_addresses": ["izba@kompozitor.si"] }
+  ]
+}

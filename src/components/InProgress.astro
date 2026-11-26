@@ -1,0 +1,76 @@
+---
+import Logo from './Logo.astro';
+import { cartons, drawings, jump, LANDED, track } from '../lib/cartons';
+
+const shut = drawings[drawings.length - 1];
+---
+<section aria-labelledby="in-progress-title" class="flex min-h-svh flex-col items-center px-3">
+  <div class="pt-[clamp(1rem,4.5svh,2.75rem)] [&_img]:w-32 sm:[&_img]:w-36"><Logo /></div>
+
+  <div class="flex w-full flex-1 flex-col items-center justify-center py-3">
+    <svg data-box-loop data-landed={LANDED} role="img" aria-labelledby="carton-title" viewBox="-192 -188 390 216" class="block h-auto max-h-[max(9rem,calc(100svh_-_14rem))] w-full max-w-[51rem] select-none" fill="none" stroke="#332c28" stroke-width="2.35" stroke-linejoin="round" stroke-linecap="round">
+      <title id="carton-title">Tri pisane škatle se zložijo in skočijo na kup.</title>
+      <path d="M-137 4Q-114-4-78-4Q-24-14 52-16Q101-21 122-11Q144-4 115 1Q48 13-15 12Q-110 18-137 9Q-143 7-137 4Z" fill="#e7dec9" stroke="none" />
+      <path d="M-116 13q7 1 11 0m5 2 3-.3M84 6q11-.5 18-3" stroke-width="1.2" stroke="#93846f" />
+      {cartons.map((box, i) => {
+        const [front, side, top] = box.colors;
+        const layers = [
+          ['base', '#e8d2ac', 2.35], ['rearWall', '#d2b38a', 2.35], ['innerWall', '#ae8d6b', 2.35],
+          ['backLid', top, 2.35], ['side', side, 2.35], ['front', front, 2.35],
+          ['hatch', 'none', 1.25], [box.detail, box.detail === 'mark' ? '#43382c' : '#f7e4af', box.detail === 'mark' ? 0 : 1.25],
+          ['frontLid', top, 2.35],
+        ] as const;
+        const hop = jump(box);
+        return (
+          <g data-carton transform={`translate(${box.to.join(' ')})`}>
+            <animateTransform attributeName="transform" type="translate" {...hop.move} />
+            <g>
+              <animateTransform attributeName="transform" type="rotate" {...hop.turn} />
+              <g transform={`scale(${box.size})`}>
+                <g>
+                  <animateTransform attributeName="transform" type="scale" {...hop.squash} />
+                  {layers.map(([part, fill, weight]) => (
+                    <path d={shut[part]} fill={fill} stroke-width={weight}>
+                      <animate attributeName="d" {...track(box.start, [0,.34,.61,.86,1.17], drawings.map(p => p[part]))} />
+                    </path>
+                  ))}
+                  {i === 2 && <path d="M63-87l3-7m2 14 7-3" opacity="0" stroke-width="2">
+                    <animate attributeName="opacity" {...track(box.start + 1.93, [0,.09,.19,.36], ['0','1','1','0'])} />
+                  </path>}
+                </g>
+              </g>
+            </g>
+          </g>
+        );
+      })}
+    </svg>
+    <h1 id="in-progress-title" class="mt-2 -rotate-2 font-serif text-[clamp(2.8rem,6.5vw,4.8rem)] leading-none font-bold tracking-[-0.055em] italic">kmalu</h1>
+    <svg aria-hidden="true" viewBox="0 0 85 9" class="mt-1 h-2 w-20 -rotate-2" fill="#d6a74d"><path d="M2 5Q32-1 80 2Q86 3 82 5Q34 4 5 8Q-1 8 2 5Z" /></svg>
+  </div>
+</section>
+
+<script>
+  const scene = document.querySelector<SVGSVGElement>('[data-box-loop]');
+  if (scene && typeof scene.pauseAnimations === 'function') {
+    const motion = matchMedia('(prefers-reduced-motion: reduce)');
+    let started = false;
+    const sync = () => {
+      if (motion.matches || document.hidden) {
+        scene.pauseAnimations();
+        if (motion.matches && started) scene.setCurrentTime(Number(scene.dataset.landed));
+        return;
+      }
+      if (!started) {
+        // Begin all cels on the same clock. Until then the SVG is a finished still.
+        scene.pauseAnimations();
+        scene.setCurrentTime(0);
+        scene.querySelectorAll<SVGAnimationElement>('animate, animateTransform').forEach(a => a.beginElement());
+        started = true;
+      }
+      scene.unpauseAnimations();
+    };
+    motion.addEventListener('change', sync);
+    document.addEventListener('visibilitychange', sync);
+    sync();
+  }
+</script>

@@ -1,0 +1,598 @@
+---
+import '../../styles/global.css';
+import '@fontsource-variable/instrument-sans';
+import { Image } from 'astro:assets';
+import nook from '../../assets/projects/nook-full-desktop.webp';
+import nookMobile from '../../assets/projects/nook-full-mobile.webp';
+import olga from '../../assets/projects/olga-full-desktop.webp';
+import olgaMobile from '../../assets/projects/olga-full-mobile.webp';
+import ingreen from '../../assets/projects/ingreen-full-desktop.webp';
+import ingreenUnitMobile from '../../assets/projects/ingreen-full-mobile.webp';
+import ingreenDesktop from '../../assets/projects/ingreen-feature-desktop.webp';
+import ingreenMobile from '../../assets/projects/ingreen-feature-mobile.webp';
+import reviewsShot from '../../assets/included/reviews.webp';
+import photosShot from '../../assets/included/photos.webp';
+import siteDesktop from '../../assets/included/site-desktop.webp';
+import siteMobile from '../../assets/included/site-mobile.webp';
+import { inbox } from '../../data';
+import { euro, owner, phone, pricing, tel, whatsapp } from '../../izba';
+
+const shell = 'mx-auto max-w-[96rem] px-5 sm:px-10 xl:px-16';
+const display = 'text-[clamp(2.45rem,5.1vw,5rem)] font-semibold leading-[.99] tracking-[-.05em] [word-spacing:.025em]';
+const label = 'text-sm font-semibold tracking-[-.015em]';
+// Lime (--accent) only sits on a dark background (except in the #stik panel).
+const buttonBase = 'inline-flex min-h-14 w-fit items-center justify-center rounded-full px-6 py-2 text-sm font-semibold motion-safe:transition-colors';
+const button = `${buttonBase} bg-(--deep) text-(--accent) hover:bg-(--ink)`;
+const buttonOnDark = `${buttonBase} bg-(--accent) text-(--ink) hover:bg-(--accent-hover)`;
+const nookUrl = 'https://nature-nook.si/';
+const ingreenUrl = 'https://ingreen-house.si/';
+const olgaUrl = 'https://apartments-olga.si/';
+// Hero carousel. Inactive slides wait lower down; the active one rises into place.
+const enter = 'opacity-0 transition duration-700 ease-[cubic-bezier(.2,.8,.2,1)] group-data-active:translate-y-0 group-data-active:scale-100 group-data-active:rotate-0 group-data-active:opacity-100 motion-reduce:transition-none';
+const featured = [
+  { name: 'InGreen', id: 'ingreen', place: 'Obrne, Slovenija', desktop: ingreenDesktop, mobile: ingreenMobile, alt: 'Naslovna stran InGreen s fotografijo hiše in vrta ter dostopom do apartmajev' },
+  { name: 'Nature Nook', id: 'nature-nook', place: 'Bled, Slovenija', desktop: nook, mobile: nookMobile, alt: 'Naslovna stran Nature Nook z veliko fotografijo terase med krošnjami' },
+  { name: 'Apartments Olga', id: 'apartments-olga', place: 'Bled, Slovenija', desktop: olga, mobile: olgaMobile, alt: 'Naslovna stran Apartments Olga s kolažem fotografij apartmajev' },
+];
+const projects = [
+  {
+    name: 'Nature Nook', id: 'nature-nook', note: 'Bled · En apartma', href: nookUrl, image: nook, mobile: nookMobile,
+    alt: 'Angleška naslovna stran Nature Nook z veliko fotografijo terase med krošnjami',
+  },
+  {
+    name: 'Apartments Olga', id: 'apartments-olga', note: 'Bled · Štirje apartmaji', href: olgaUrl, image: olga, mobile: olgaMobile,
+    alt: 'Angleška naslovna stran Apartments Olga s kolažem fotografij in pregledom apartmajev na obeh lokacijah',
+  },
+  {
+    name: 'InGreen', id: 'ingreen', note: 'Obrne · Štirje apartmaji', href: ingreenUrl, image: ingreen, mobile: ingreenUnitMobile,
+    alt: 'Angleška naslovna stran InGreen s fotografijo hiše in vrta ter pregledom štirih enot',
+  },
+];
+const process = [
+  ['Vi', 'Pošljete oglas', 'Pošljete povezavo do nastanitve na Bookingu ali Airbnbju.'],
+  ['Mi', 'Spoznamo vašo nastanitev', 'Preberemo oglas in mnenja gostov ter pregledamo fotografije. Tako vidimo, kaj gostje pri vas najbolj cenijo.'],
+  ['Mi', 'Pripravimo predogled', 'V 3 delovnih dneh vam pošljemo stran, kot bi bila videti. Predogled je brezplačen in vas na nič ne veže.'],
+  ['Skupaj', 'Potrdimo in objavimo', 'Pogledate stran in nam v enem sporočilu poveste, kaj bi spremenili. Ko ste zadovoljni in je plačano, je stran v 3 delovnih dneh na spletu.'],
+];
+const included = [
+  { id: 'nasveti', title: 'Nasveti za vaš oglas', body: 'Preberemo vaš oglas in mnenja gostov ter vam povemo, kako lahko nastanitev predstavite še bolje. Najboljše pohvale gostov postavimo na stran.', image: reviewsShot, alt: 'Del strani Apartments Olga z oceno 9,1 na Bookingu in tremi mnenji gostov' },
+  { id: 'fotografije', title: 'Besedila in fotografije', body: 'Uredimo opise ter izberemo in razvrstimo fotografije. Po potrebi jih malo posvetlimo ali poravnamo. Novega fotografiranja ni.', image: photosShot, alt: 'Del strani InGreen: fotografije vrta in bazena, urejene v galerijo s kratkimi opisi' },
+  { id: 'stran', title: 'Vaša spletna stran', body: 'Oblikovana posebej za vas, v slovenščini, angleščini, nemščini in italijanščini. Lepo deluje tudi na telefonu. Ima fotografije, predstavitev, zemljevid in obrazec, prek katerega vam gostje pišejo.' },
+  { id: 'iskalniki', title: 'Da vas najdejo', body: 'Stran pripravimo tako, da jo hitro najdejo iskalniki (Google, Bing) in AI pomočniki (ChatGPT, Gemini). Povežemo jo tudi z vašim profilom na Googlu (Google Business).' },
+];
+const compare = [
+  ['Izba', `${euro(pricing.base)} enkratno + ${euro(pricing.yearly)} na leto`, 'Vse naredimo mi, v štirih jezikih.'],
+  ['Agencija', 'od približno 730 € z DDV', 'Gostovanje in dodatni jeziki pogosto posebej.'],
+  ['Sami, npr. z Wixom', '100–200 € na leto', 'Stran naredite sami, v svojem času.'],
+];
+const maintenance = [
+  ['Manjše spremembe', 'Zamenjamo fotografijo, popravimo besedilo, posodobimo ceno ali uredimo drugo malenkost. V razumnem obsegu brez doplačila.'],
+  ['Stran je vedno dosegljiva', 'Poskrbimo, da stran deluje in je dosegljiva na vašem naslovu.'],
+  ['Varna povezava', 'Ob naslovu strani se prikaže ključavnica, brskalnik pa gostov ne opozarja, da stran ni varna.'],
+  ['Pomoč, ko kaj ne dela', 'Če kaj ne deluje, nam pišite in uredimo. Večje posege prej dogovorimo.'],
+  ['Koliko ljudi obišče stran', 'Obiske štejemo brez piškotkov, zato gostov ne moti pasica za soglasje. Številke vam pošljemo, kadar jih želite.'],
+  ['E-naslov z imenom vaše strani', 'Npr. info@vasa-nastanitev.si. Sporočila prihajajo v vaš obstoječi e-predal. Brez doplačila.'],
+];
+const questions = [
+  ['Zakaj sploh potrebujem svojo spletno stran?', 'Da niste odvisni samo od Bookinga. Če Booking ali Airbnb spremeni pravila ali provizije ali vaš oglas skrije, lahko ostanete brez gostov. Lastna stran je vaša. Gostje vam prek nje pišejo neposredno, brez provizije. Vse več ljudi nastanitve išče tudi z orodji umetne inteligence, ki dostikrat predlagajo povezave do uradnih strani nastanitev.'],
+  ['Koliko stane predogled?', 'Nič. Predogled pripravimo v 3 delovnih dneh in vas na nič ne veže. Če vam ni všeč, ne plačate ničesar.'],
+  ['Ali moram prenehati uporabljati Booking?', 'Ne. Booking in Airbnb lahko obdržite. Stran je dodaten kraj, kjer vas gostje spoznajo in vam pišejo neposredno.'],
+  ['Ali je sporočilo prek obrazca že rezervacija?', 'Ne. Sporočilo gosta pride na vaš e-naslov, termin in ceno pa se z njim dogovorite sami. Stran nima koledarja zasedenosti in ne sprejema plačil.'],
+  ['V katerih jezikih je stran?', 'V slovenščini, angleščini, nemščini in italijanščini, brez doplačila. Slovensko in angleško različico pregledamo sami. Nemščine in italijanščine ne govorimo, zato vam ti različici pred objavo pošljemo v pregled.'],
+  ['Zakaj ne Wix?', 'Pri Wixu stran naredite sami. Pri Izbi nam pošljete povezavo, za ostalo poskrbimo mi.'],
+  ['Kaj pa zunanji rezervacijski sistemi, ki jih že uporabljam?', 'Preverimo, kako lahko vaš rezervacijski sistem (npr. Bentral ali SnapGuest) povežemo s spletno stranjo. Če je povezava mogoča, jo za zdaj uredimo brez doplačila.'],
+  ['Kaj potrebujete od mene?', 'Samo povezavo do oglasa na Bookingu ali Airbnbju. Ne potrebujemo gesel, novih besedil ali fotografij.'],
+  ['Čigava sta stran in njen naslov?', 'Naslov strani (domeno) registriramo na vaše ime in ga zaračunamo toliko, kolikor stane nas. Če se kdaj odločite končati sodelovanje, stran ugasne, vi pa obdržite naslov in dobite vse datoteke strani. Pri selitvi vam pomagamo.'],
+];
+---
+<!doctype html>
+<html lang="sl" class="motion-safe:scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,follow" />
+    <meta name="description" content="Iz vašega Booking.com/Airbnb oglasa do spletne strani po meri. Izba uredi vsebino in izdela lastno stran za apartma ali manjšo nastanitev. Storitev studia Kompozitor." />
+    <link rel="icon" href="/izba-mark.svg" type="image/svg+xml" />
+    <title>Izba — Spletne strani za apartmaje in manjše nastanitve</title>
+  </head>
+  <body data-izba-palette class="bg-(--paper) font-['Instrument_Sans_Variable',system-ui,sans-serif] text-(--ink) antialiased selection:bg-(--deep) selection:text-(--accent) [&_a]:focus-visible:outline-2 [&_a]:outline-offset-4 [&_summary]:focus-visible:outline-2 [&_summary]:outline-offset-4">
+    <a href="#vsebina" class="sr-only z-50 bg-(--deep) font-semibold text-(--accent) focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:rounded-xl focus:px-4 focus:py-3">Preskoči na vsebino</a>
+    <header class={shell}>
+      <div class="flex min-h-17 flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-(--line) py-2.5 sm:min-h-20">
+        <a href="/izba/" aria-label="Izba – naslovna stran" class="inline-flex min-h-11 items-center gap-2.5 text-[2rem] leading-none font-bold tracking-[-.075em] sm:text-[2.2rem]">
+          <span class="grid size-8 place-items-center rounded-lg bg-(--deep) text-(--accent) sm:size-9"><svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 29V3h26v26h-3V6H6v23H3Zm4-22 11 3.5v15L7 29V7Z" /></svg></span>
+          izba
+        </a>
+        <nav aria-label="Po strani" class="flex items-center gap-3 text-sm font-medium sm:gap-8">
+          <a class="flex min-h-11 items-center hover:underline hover:underline-offset-4" href="#primer">Delo</a>
+          <a class="flex min-h-11 items-center hover:underline hover:underline-offset-4" href="#cene">Cene</a>
+          <a class="flex min-h-11 items-center rounded-full border border-(--line) px-3 hover:border-(--ink) sm:px-4" href="#stik">Stik</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="vsebina" tabindex="-1">
+      <section class={`${shell} grid gap-7 pt-8 pb-11 sm:gap-12 sm:py-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.04fr)] lg:items-center lg:gap-9 lg:py-[clamp(3.25rem,5vw,5.5rem)] xl:gap-12`}>
+        <div>
+          <p class="flex items-baseline gap-2.5 text-sm font-medium text-(--muted)"><span class="size-2 shrink-0 rounded-full bg-(--tone)" aria-hidden="true"></span>Spletne strani za apartmaje in manjše nastanitve</p>
+          <h1 class="mt-4 max-w-[15ch] text-[clamp(2.35rem,11vw,3.55rem)] leading-[.96] font-semibold tracking-[-.052em] text-balance [word-spacing:.025em] sm:mt-6 sm:text-[clamp(3.35rem,6.5vw,4.5rem)] lg:text-[clamp(3.35rem,5.72vw,6rem)]">Iz vašega <span class="sr-only text-(--tone) motion-reduce:not-sr-only">Booking.com/<wbr />Airbnb</span><span class="inline-grid text-(--tone) motion-reduce:hidden"><span aria-hidden="true" class="col-start-1 row-start-1 animate-roll will-change-transform">Booking.com</span><span aria-hidden="true" class="col-start-1 row-start-1 animate-roll opacity-0 will-change-transform [animation-delay:-3s]">Airbnb</span></span> oglasa do spletne strani <span class="block"><span class="relative isolate -mx-[.1em] inline-block before:absolute before:inset-0 before:-z-10 before:origin-left before:animate-highlight before:rounded-[.12em] before:bg-(--deep) motion-reduce:before:animate-none"><span class="-my-[.1em] inline-block bg-[linear-gradient(to_right,var(--accent)_50%,var(--ink)_50%)] bg-size-[200%_100%] bg-left bg-clip-text px-[.1em] py-[.1em] text-transparent animate-highlight-text motion-reduce:animate-none">po meri.</span></span></span></h1>
+          <p class="mt-5 max-w-[45ch] text-base leading-[1.6] text-(--muted) sm:mt-6 sm:text-lg">Pošljete nam svoj oglas, mi pa iz njega naredimo lepo stran za vašo nastanitev. Booking ostane, gostje pa vam lahko pišejo tudi neposredno.</p>
+          <div class="mt-5 flex flex-wrap items-center gap-x-6 sm:mt-8">
+            <a href="#stik" class={button}>Pošljite povezavo do oglasa</a>
+            <a href="#primer" class="inline-flex min-h-11 items-center text-sm font-semibold underline decoration-(--line) underline-offset-4 hover:decoration-current">Poglejte primere</a>
+          </div>
+          <p class="mt-1 text-sm leading-relaxed text-(--muted) sm:mt-4">Dovolj je povezava. Brez gesel, novih fotografij ali besedil.</p>
+        </div>
+
+        <figure data-carousel aria-roledescription="carousel" aria-label="Izbrane spletne strani" class="group/carousel min-w-0">
+          <div class="relative isolate aspect-[1.13] overflow-hidden rounded-[1.4rem] bg-(--stage) sm:aspect-[1.2] sm:rounded-[2rem]">
+            {featured.map(({ name, id, place, desktop, mobile, alt }, i) => (
+              <a href={`#${id}`} data-slide data-active={i === 0 ? '' : undefined} inert={i !== 0} aria-label={`Projekt ${name}`} class="group absolute inset-0 opacity-0 transition-opacity duration-500 data-active:opacity-100 motion-reduce:transition-none">
+                <div class={`absolute top-[14%] left-[6%] w-[81%] ${enter} translate-y-8 scale-[.96]`}>
+                  <Image src={desktop} {alt} width={1100} height={688} fit="cover" position="top" widths={[320, 480, 720, 960, 1100]} sizes="(min-width: 1536px) 560px, (min-width: 1024px) 39vw, 76vw" loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : 'low'} class="block w-full rounded-[.55rem] border border-white/55 shadow-[0_20px_40px_#101a1333] motion-safe:transition-transform motion-safe:duration-700 motion-safe:ease-[cubic-bezier(.22,1,.36,1)] motion-safe:will-change-transform motion-safe:group-hover:-translate-y-1.5 sm:rounded-xl" />
+                </div>
+                <div class={`absolute right-[6%] bottom-[8%] w-[23%] ${enter} translate-y-16 rotate-6 group-data-active:delay-150`}>
+                  <Image src={mobile} alt="" width={390} height={740} fit="cover" position="top" widths={[120, 180, 240, 390]} sizes="(min-width: 1536px) 168px, (min-width: 1024px) 12vw, 22vw" loading={i === 0 ? 'eager' : 'lazy'} fetchpriority="low" class="block w-full rounded-[.5rem] border-[3px] border-(--ink) shadow-[0_12px_25px_#101a1340] motion-safe:transition-transform motion-safe:delay-75 motion-safe:duration-700 motion-safe:ease-[cubic-bezier(.22,1,.36,1)] motion-safe:will-change-transform motion-safe:group-hover:-translate-y-2.5 sm:rounded-[1rem] sm:border-4" />
+                </div>
+                <span class={`absolute bottom-3 left-4 flex items-center gap-2 text-xs whitespace-nowrap text-(--ink) sm:bottom-4 sm:left-6 lg:left-1/2 lg:-translate-x-1/2 ${enter} group-data-active:delay-300`}><span class="size-1.5 rounded-full bg-(--deep)" aria-hidden="true"></span>{place}</span>
+              </a>
+            ))}
+          </div>
+          <div class="mt-3 grid grid-cols-3 gap-2 sm:mt-4 sm:gap-4">
+            {featured.map(({ name }, i) => (
+              <button type="button" data-tab aria-pressed={i === 0 ? 'true' : 'false'} class="group min-h-11 cursor-pointer text-left text-xs font-medium text-(--muted) hover:text-(--ink) aria-pressed:text-(--ink) focus-visible:outline-2 focus-visible:outline-offset-4 sm:text-sm">
+                <span class="block h-0.5 overflow-hidden rounded-full bg-(--line)"><span data-fill class="block h-full origin-left scale-x-0 bg-(--ink) group-aria-pressed:scale-x-100 group-hover/carousel:[animation-play-state:paused] group-focus-within/carousel:[animation-play-state:paused]"></span></span>
+                <span class="mt-2 block truncate">{name}</span>
+              </button>
+            ))}
+          </div>
+        </figure>
+      </section>
+
+      <section id="primer" class={`${shell} scroll-mt-6 pb-16 sm:pb-24`}>
+        <div class="flex flex-col gap-5 border-t border-(--line) pt-8 sm:pt-12 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
+          <div>
+            <p class={label}>Naše delo</p>
+            <h2 class={`${display} mt-4`}>Primeri strani</h2>
+          </div>
+          <p class="max-w-[42ch] leading-relaxed text-(--muted) sm:text-lg lg:pb-2">Strani, ki smo jih pripravili za nastanitve na Bledu in v Obrnah. Izberite eno in si oglejte, kako je videti na računalniku in telefonu.</p>
+        </div>
+        {/* Pure-CSS picker: each radio shows the article two siblings after it. */}
+        <div class="mt-8 grid grid-cols-3 gap-y-3 sm:mt-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,3fr)] lg:grid-rows-[auto_auto_auto_1fr] lg:gap-x-8 lg:gap-y-0">
+          {projects.map(({ name, id, note, href, image, mobile, alt }, i) => (
+            <Fragment>
+              <input type="radio" name="projekt" id={`projekt-${id}`} value={id} checked={i === 0} class="sr-only" />
+              <label for={`projekt-${id}`} class={`${['col-start-1 lg:row-start-1 lg:border-t', 'col-start-2 lg:row-start-2', 'col-start-3 lg:row-start-3'][i]} relative row-start-1 flex min-h-12 min-w-0 cursor-pointer flex-col justify-center gap-1 border-b border-(--line) px-2 py-3 text-center text-(--muted) hover:bg-(--field)/55 hover:text-(--ink) motion-safe:transition-colors after:pointer-events-none after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:bg-(--tone) after:opacity-0 sm:px-4 lg:col-start-1 lg:py-4 lg:pr-10 lg:text-left lg:after:inset-y-0 lg:after:right-auto lg:after:h-auto lg:after:w-0.5 [input:checked+&]:bg-(--field) [input:checked+&]:text-(--ink) [input:checked+&]:after:opacity-100 [input:focus-visible+&]:z-10 [input:focus-visible+&]:outline-2 [input:focus-visible+&]:-outline-offset-2`}>
+                <span class="text-sm leading-tight font-semibold tracking-tight [overflow-wrap:anywhere] sm:text-base lg:text-xl">{name}</span>
+                <span class="hidden text-xs text-(--muted) sm:block lg:text-sm">{note}</span>
+                <svg aria-hidden="true" class="absolute top-1/2 right-4 hidden size-4 -translate-y-1/2 text-(--tone) opacity-0 lg:block [input:checked+label_&]:opacity-100" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 4 4 4-4 4" /></svg>
+              </label>
+              <article id={id} aria-label={name} class="col-span-3 row-start-2 hidden min-w-0 scroll-mt-6 pt-2 lg:col-span-1 lg:col-start-2 lg:row-span-4 lg:row-start-1 lg:pt-0 [input:checked+label+&]:block">
+                {/* The desktop sets the grid row height; the phone stretches to match. */}
+                <div class="grid grid-cols-[minmax(0,1fr)_26%] items-stretch gap-3 rounded-[1.25rem] bg-(--field) p-3 ring-1 ring-(--ink)/12 sm:gap-5 sm:rounded-[1.6rem] sm:p-6 lg:p-8">
+                  <div class="overflow-hidden rounded-lg border border-(--ink)/15 bg-(--paper) shadow-[0_20px_40px_#101a1322] sm:rounded-xl">
+                    <div class="flex min-h-7 items-center gap-2 border-b border-(--line) px-2.5 sm:min-h-10 sm:px-4" aria-hidden="true">
+                      <span class="hidden gap-1.5 sm:flex"><span class="size-2.5 rounded-full bg-(--ink)/15"></span><span class="size-2.5 rounded-full bg-(--ink)/15"></span><span class="size-2.5 rounded-full bg-(--ink)/15"></span></span>
+                      <span class="min-w-0 flex-1 truncate rounded-full bg-(--field) px-3 py-0.5 text-center text-[.65rem] text-(--muted) sm:py-1 sm:text-xs">{new URL(href).hostname}</span>
+                    </div>
+                    <div role="region" tabindex="0" aria-label={`Računalniški predogled: ${name}`} class="aspect-[16/10] overflow-x-hidden overflow-y-auto overscroll-contain [scrollbar-width:thin] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-(--tone)">
+                      <Image src={image} {alt} widths={[480, 720, 960, 1280]} sizes="(min-width: 1536px) 820px, (min-width: 1024px) 52vw, 68vw" loading="lazy" class="block h-auto w-full" />
+                    </div>
+                  </div>
+                  <div class="flex flex-col overflow-hidden rounded-[.8rem] border-[3px] border-(--ink) bg-(--ink) shadow-[0_12px_25px_#101a1340] [contain:size] sm:rounded-[1.4rem] sm:border-[5px]">
+                    <div class="flex h-3 shrink-0 items-center justify-center sm:h-5" aria-hidden="true"><span class="h-1 w-1/3 rounded-full bg-white/25 sm:h-1.5"></span></div>
+                    <div role="region" tabindex="0" aria-label={`Mobilni predogled: ${name}`} class="min-h-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-contain bg-(--paper) [scrollbar-width:thin] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-(--tone)">
+                      <Image src={mobile} alt="" widths={[120, 240, 390]} sizes="(min-width: 1536px) 290px, (min-width: 1024px) 18vw, 24vw" loading="lazy" class="block h-auto w-full" />
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+                  <p class="text-sm text-(--muted)"><span class="font-semibold text-(--ink) sm:hidden">{note}. </span>Podrsajte po enem predogledu. Oba se pomikata skupaj.</p>
+                  <a href={href} hreflang="en" class="inline-flex min-h-11 items-center gap-2 border-b border-(--line) text-sm font-semibold hover:border-current motion-safe:transition-colors">
+                    Odprite {new URL(href).hostname}
+                    <svg aria-hidden="true" class="size-4 shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12 12 4M6 4h6v6" /></svg>
+                  </a>
+                </div>
+              </article>
+            </Fragment>
+          ))}
+        </div>
+      </section>
+
+      <section id="postopek" class={`${shell} scroll-mt-6`}>
+        <div class="grid gap-8 rounded-[1.5rem] bg-(--field) px-5 py-8 sm:gap-10 sm:rounded-[2rem] sm:p-10 lg:grid-cols-[.9fr_1.1fr] lg:gap-12 lg:p-13 xl:p-16">
+          <div>
+            <p class={label}>Kako sodelujemo</p>
+            <h2 class={`${display} mt-4`}>Od oglasa<br />do objave.</h2>
+            <p class="mt-5 max-w-[31ch] leading-relaxed text-(--muted) sm:text-lg">Potrebujete le povezavo do oglasa. Za vse ostalo poskrbimo mi.</p>
+          </div>
+          <ol role="list" class="divide-y divide-(--line) border-t border-(--line)">
+            {process.map(([who, title, body], i) => (
+              <li class="grid grid-cols-[2.25rem_minmax(0,1fr)] items-start gap-3 py-4.5 sm:gap-4 sm:py-5">
+                <span aria-hidden="true" class:list={['grid size-9 place-items-center rounded-full text-xs font-semibold tabular-nums', i === 0 ? 'bg-(--deep) text-(--accent)' : 'border border-(--line)']}>0{i + 1}</span>
+                <div>
+                  <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5"><h3 class="text-xl font-semibold tracking-tight">{title}</h3><span class="text-sm font-medium text-(--muted)">{who}</span></div>
+                  <p class="mt-1 max-w-lg leading-relaxed text-(--muted)">{body}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section id="ponudba" class={`${shell} scroll-mt-6 py-16 sm:py-22`}>
+        <div class="grid gap-5 lg:grid-cols-2 lg:items-end lg:gap-14">
+          <div>
+            <p class={label}>Vse je vključeno</p>
+            <h2 class={`${display} mt-4`}>Kaj dobite.</h2>
+          </div>
+          <p class="max-w-[44ch] leading-relaxed text-(--muted) sm:text-lg">Vse spodaj je v ceni <strong class="font-semibold text-(--ink)">{euro(pricing.base)}</strong>. Brez doplačila za jezike, besedila ali urejanje fotografij.</p>
+        </div>
+
+        <ol role="list" class="mt-9 grid gap-x-9 gap-y-12 sm:mt-12 md:grid-cols-2 xl:gap-x-14 xl:gap-y-16">
+          {included.map(({ id, title, body, image, alt }, i) => (
+            <li>
+              <div class="relative aspect-[4/3] overflow-hidden rounded-[1.4rem] bg-(--stage) sm:rounded-[2rem]">
+                {image && (
+                  <Image src={image} alt={alt} widths={[480, 720, 960, 1280]} sizes="(min-width: 1536px) 660px, (min-width: 768px) 44vw, 88vw" loading="lazy" class="absolute top-[9%] left-[7%] w-[86%] rounded-lg shadow-[0_20px_40px_#101a1326] sm:rounded-xl" />
+                )}
+                {id === 'stran' && (
+                  <Fragment>
+                    <Image src={siteDesktop} alt="Naslovna stran Apartments Olga na računalniku" widths={[480, 720, 960, 1280]} sizes="(min-width: 1536px) 560px, (min-width: 768px) 38vw, 74vw" loading="lazy" class="absolute top-[16%] left-[6%] w-[74%] rounded-lg shadow-[0_20px_40px_#101a1326] sm:rounded-xl" />
+                    <Image src={siteMobile} alt="Ista stran na telefonu" widths={[180, 240, 390]} sizes="(min-width: 1536px) 170px, (min-width: 768px) 12vw, 24vw" loading="lazy" class="absolute top-[26%] right-[7%] w-[24%] rounded-[.6rem] border-[3px] border-(--ink) shadow-[0_14px_28px_#101a1340] sm:rounded-[1rem] sm:border-4" />
+                  </Fragment>
+                )}
+                {id === 'iskalniki' && (
+                  <div role="img" aria-label="Ponazoritev: vaša stran med zadetki iskalnika in v odgovoru AI pomočnika" class="absolute inset-[6%] grid content-center gap-2.5 sm:inset-[8%] sm:gap-4">
+                    <div class="rounded-xl bg-(--paper) p-3.5 shadow-[0_20px_40px_#101a1326] sm:rounded-2xl sm:p-5">
+                      <div class="flex items-center gap-2 rounded-full border border-(--line) px-3.5 py-2 text-xs text-(--muted) sm:text-sm">
+                        <svg class="size-3.5 shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="7" cy="7" r="4.5" /><path d="m10.5 10.5 3 3" stroke-linecap="round" /></svg>
+                        apartma bled z vrtom
+                      </div>
+                      <p class="mt-2.5 text-[.7rem] text-(--tone) sm:mt-4 sm:text-xs">vasa-nastanitev.si</p>
+                      <p class="text-sm font-semibold tracking-tight sm:text-lg">Vaša nastanitev · Apartma na Bledu</p>
+                      <p class="mt-0.5 line-clamp-1 hidden text-xs text-(--muted) sm:block sm:text-sm">Apartma za 4 osebe, 1,3 km od jezera. Pišite nam neposredno.</p>
+                    </div>
+                    <div class="ml-[12%] rounded-xl bg-(--deep) p-3.5 text-(--paper) shadow-[0_20px_40px_#101a1333] sm:rounded-2xl sm:p-5">
+                      <p class="text-[.7rem] font-semibold text-(--accent) sm:text-xs">AI pomočnik</p>
+                      <p class="mt-1 text-xs leading-relaxed text-(--on-deep) sm:text-sm">Na Bledu priporočam <span class="font-semibold text-(--paper)">Vašo nastanitev</span>: apartma z vrtom, 1,3 km od jezera.<span class="hidden sm:inline"> <span class="underline underline-offset-2">vasa-nastanitev.si</span></span></p>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div class="mt-5 grid grid-cols-[2.25rem_minmax(0,1fr)] gap-3 sm:mt-6 sm:gap-4">
+                <span aria-hidden="true" class="grid size-9 place-items-center rounded-full border border-(--line) text-xs font-semibold tabular-nums">0{i + 1}</span>
+                <div>
+                  <h3 class="text-2xl font-semibold tracking-[-.04em]">{title}</h3>
+                  <p class="mt-2 max-w-[48ch] leading-relaxed text-(--muted)">{body}</p>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ol>
+
+        <div class="mt-14 rounded-[1.5rem] bg-(--field) p-5 sm:mt-18 sm:rounded-[2rem] sm:p-8 lg:p-10">
+          <h3 class="text-2xl font-semibold tracking-[-.04em] sm:text-3xl">Koliko bi stalo drugje?</h3>
+          <dl class="mt-5 grid divide-y divide-(--line) border-y border-(--line) md:grid-cols-3 md:divide-x md:divide-y-0 md:border-y-0">
+            {compare.map(([who, price, note], i) => (
+              <div class="py-4 md:px-6 md:py-1 md:first:pl-0 md:last:pr-0">
+                <dt class:list={['text-sm font-semibold', i === 0 ? 'text-(--tone)' : 'text-(--muted)']}>{who}</dt>
+                <dd class:list={['mt-1 text-xl font-semibold tracking-tight tabular-nums', i !== 0 && 'text-(--muted)']}>{price}</dd>
+                <dd class="mt-1 text-sm leading-relaxed text-(--muted)">{note}</dd>
+              </div>
+            ))}
+          </dl>
+          <p class="mt-4 text-xs leading-relaxed text-(--muted)">Po javnih cenikih ponudnikov, november 2026.</p>
+        </div>
+      </section>
+
+      <section id="cene" class="scroll-mt-6 bg-(--deep) text-(--paper)">
+        <div class={`${shell} grid gap-8 py-14 sm:gap-10 sm:py-20 lg:grid-cols-[.8fr_1.2fr] lg:gap-14 xl:py-24`}>
+          <div>
+            <p class={`${label} text-(--accent)`}>Cena</p>
+            <h2 class={`${display} mt-4`}>Enkrat za stran.<br />Letno za skrb.</h2>
+            <p class="mt-5 max-w-[35ch] leading-relaxed text-(--on-deep) sm:text-lg"><strong class="font-semibold text-(--paper)">{euro(pricing.base)}</strong> za prvo enoto. Vsaka naslednja le <strong class="font-semibold text-(--accent)">+{euro(pricing.perUnit)}</strong>, do {pricing.maxUnits} enot. Za večje nastanitve pripravimo ponudbo.</p>
+            <p class="mt-5 max-w-[39ch] leading-relaxed text-(--on-deep)">Z letnim zneskom skrbimo, da stran deluje in je vedno dosegljiva. Naslov strani (domeno) registriramo na vaše ime in ga zaračunamo toliko, kolikor stane nas. Brez mesečne naročnine in brez provizije od rezervacij.</p>
+            <a href="#vzdrzevanje" class="mt-4 inline-flex min-h-11 items-center text-sm font-semibold text-(--accent) underline underline-offset-4">Kaj krije letni znesek?</a>
+          </div>
+
+          <div data-calc class="min-w-0 rounded-[1.5rem] bg-white/6 p-5 ring-1 ring-white/15 sm:rounded-[2rem] sm:p-8">
+            <fieldset>
+              <legend class="text-xl font-semibold tracking-tight">Koliko enot ima vaša nastanitev?</legend>
+              <p class="mt-1 text-sm leading-relaxed text-(--on-deep)">Štejte apartmaje ali sobe, ki jih gostje rezervirajo posebej.</p>
+              <div class="mt-5 grid grid-cols-6 gap-1.5 sm:gap-2">
+                {[...Array.from({ length: pricing.maxUnits }, (_, i) => String(i + 1)), `${pricing.maxUnits + 1}+`].map((value, i) => (
+                  <label class="cursor-pointer">
+                    <input type="radio" name="enote" value={i + 1} checked={i === 0} class="peer sr-only" />
+                    <span class="grid min-h-12 place-items-center rounded-xl border border-white/25 text-lg font-semibold tabular-nums hover:border-white/60 peer-checked:border-(--accent) peer-checked:bg-(--accent) peer-checked:text-(--ink) peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-(--accent) motion-safe:transition-colors sm:min-h-14">{value}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+
+            <div aria-live="polite" class="mt-7 border-t border-white/20 pt-6 sm:mt-8">
+              <p class="text-sm text-(--on-deep)">Izdelava strani, enkratno</p>
+              <p class="mt-1 flex flex-wrap items-baseline gap-x-3"><output data-out="setup" class="text-[clamp(3rem,8vw,4.5rem)] leading-none font-semibold tracking-[-.05em] text-(--accent) tabular-nums">{euro(pricing.base)}</output><span data-out="formula" class="text-sm text-(--on-deep)">ena enota · vsaka naslednja +{euro(pricing.perUnit)}</span></p>
+              <p data-quote hidden class="mt-3 max-w-[40ch] text-sm leading-relaxed text-(--on-deep)">Pri večjih nastanitvah ceno določimo po pregledu gradiva. Pošljite povezavo in pripravimo ponudbo.</p>
+              <dl data-priced class="mt-6 divide-y divide-white/20 border-y border-white/20 text-sm sm:text-base">
+                <div class="flex justify-between gap-4 py-3"><dt class="text-(--on-deep)">Letna skrb za stran</dt><dd class="font-semibold tabular-nums">{euro(pricing.yearly)} / leto</dd></div>
+                <div class="flex justify-between gap-4 py-3"><dt class="text-(--on-deep)">Prvo leto, plačilo ob objavi</dt><dd class="text-right font-semibold tabular-nums"><span data-out="first">{euro(pricing.base + pricing.yearly)}</span> + domena</dd></div>
+              </dl>
+              <p class="mt-4 text-sm leading-relaxed text-(--on-deep)">Vključeno: štirje jeziki (slovenščina, angleščina, nemščina, italijanščina), obrazec za sporočila gostov, priprava za iskalnike in AI pomočnike ter en krog popravkov.</p>
+            </div>
+
+            <a href="#stik" class={`${buttonOnDark} mt-6`}>Pošljite povezavo do oglasa</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="vzdrzevanje" class={`${shell} scroll-mt-6 pt-16 sm:pt-22`}>
+        <div class="grid gap-7 rounded-[1.5rem] bg-(--field) px-5 py-8 sm:gap-10 sm:rounded-[2rem] sm:p-10 lg:grid-cols-[.8fr_1.2fr] lg:gap-14 lg:p-13">
+          <div>
+            <p class={label}>Po objavi</p>
+            <h2 class={`${display} mt-4`}>Kaj krije letni znesek?</h2>
+            <p class="mt-5 max-w-[40ch] leading-relaxed text-(--muted) sm:text-lg">Ko je stran objavljena, zanjo skrbimo mi. Vi se posvetite gostom.</p>
+          </div>
+          <div>
+            <dl class="divide-y divide-(--line) border-y border-(--line)">
+              {maintenance.map(([title, body]) => (
+                <div class="py-4">
+                  <dt class="text-lg font-semibold tracking-tight">{title}</dt>
+                  <dd class="mt-1 max-w-[52ch] leading-relaxed text-(--muted)">{body}</dd>
+                </div>
+              ))}
+            </dl>
+            <p class="mt-4 max-w-[55ch] text-sm leading-relaxed text-(--muted)">Za spremembo nam pišite na <a href={`mailto:${inbox}`} class="font-semibold underline underline-offset-4">{inbox}</a>. Povejte, kaj naj popravimo, in po potrebi priložite novo fotografijo ali besedilo. Če želite več, kot pokriva dogovorjeni obseg, vam najprej povemo ceno, odločite pa se sami.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="vprasanja" class={`${shell} grid scroll-mt-6 gap-7 py-16 sm:py-22 lg:grid-cols-[.8fr_1.2fr] lg:gap-14`}>
+        <div><p class={label}>Preden začnemo</p><h2 class={`${display} mt-4`}>Pogosta<br />vprašanja.</h2></div>
+        <div class="divide-y divide-(--line) border-y border-(--line)">
+          {questions.map(([question, answer]) => (
+            <details class="group">
+              <summary class="flex min-h-15 cursor-pointer list-none items-center justify-between gap-4 py-4 text-base font-semibold tracking-tight hover:underline sm:text-lg [&::-webkit-details-marker]:hidden">
+                {question}
+                <span aria-hidden="true" class="grid size-7 shrink-0 place-items-center rounded-full border border-(--line) group-hover:bg-(--field) group-open:border-(--ink) group-open:bg-(--ink) group-open:text-(--paper) group-open:group-hover:bg-(--field) group-open:group-hover:text-black">
+                  <svg class="size-4 group-open:rotate-180" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4" /></svg>
+                </span>
+              </summary>
+              <p class="max-w-[60ch] pb-5 leading-relaxed text-(--muted)">{answer}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section id="stik" class={`${shell} scroll-mt-6`}>
+        <div class="relative isolate grid gap-10 overflow-hidden rounded-[1.5rem] bg-(--accent) px-5 py-9 sm:rounded-[2rem] sm:p-12 lg:grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)] lg:gap-14 lg:p-15 xl:p-17">
+          <svg class="pointer-events-none absolute -bottom-10 -left-10 -z-10 h-[70%] w-auto max-w-[60%] text-(--tone)/30 max-lg:hidden" viewBox="0 0 560 360" fill="none" aria-hidden="true">
+            <path d="M142 360V127L508 23v337M109 360V152L475 48v312M76 360V177L442 73v287M43 360V202L409 98v262" stroke="currentColor" stroke-width="1.5" />
+          </svg>
+          <div class="flex flex-col">
+            <p class={label}>Prvi korak</p>
+            <h2 class={`${display} mt-4 max-w-[12ch]`}>Brezplačen predogled vaše strani.</h2>
+            <p class="mt-5 max-w-[38ch] leading-relaxed sm:text-lg">Pošljite nam povezavo do oglasa. V 3 delovnih dneh vam pokažemo, kako bi bila videti vaša stran. Če vam ni všeč, ne plačate ničesar.</p>
+
+            <div class="mt-8 max-w-md rounded-[1.25rem] bg-(--ink) p-5 text-(--paper) sm:p-6 lg:mt-auto">
+              <p class="text-sm text-(--on-deep)">Vašo stran pripravi</p>
+              <p class="mt-1 text-2xl font-semibold tracking-[-.03em]">{owner}</p>
+              <ul class="mt-5 grid gap-2 text-sm font-semibold">
+                <li><a href={tel} class="flex min-h-11 items-center justify-between gap-3 rounded-xl bg-white/8 px-4 hover:bg-white/14">Pokličite <span class="tabular-nums text-(--accent)">{phone}</span></a></li>
+                <li><a href={whatsapp} class="flex min-h-11 items-center justify-between gap-3 rounded-xl bg-white/8 px-4 hover:bg-white/14">WhatsApp <span class="text-(--accent)">Pišite</span></a></li>
+                <li><a href={`mailto:${inbox}`} class="flex min-h-11 items-center justify-between gap-3 rounded-xl bg-white/8 px-4 hover:bg-white/14">E-pošta <span class="text-(--accent)">{inbox}</span></a></li>
+              </ul>
+              <p class="mt-4 text-sm text-(--on-deep)">Odgovorim naslednji delovni dan.</p>
+            </div>
+          </div>
+
+          <div class="min-w-0">
+            <form data-izba-form action="/api/izba" method="post" class="grid gap-5 rounded-[1.25rem] bg-(--paper) p-5 shadow-[0_20px_50px_#17241b1f] sm:rounded-[1.6rem] sm:p-8">
+              <div>
+                <label for="povezava-1" class="font-semibold">Povezava do oglasa</label>
+                <p id="povezava-namig" class="mt-0.5 text-sm text-(--muted)">Booking ali Airbnb. Kopirajte jo iz brskalnika.</p>
+                <div data-links class="mt-2 grid gap-2">
+                  <input id="povezava-1" name="povezava" type="text" inputmode="url" autocomplete="url" required placeholder="https://www.booking.com/hotel/si/…" aria-describedby="povezava-namig povezava-napaka" class="w-full min-h-12 rounded-xl border border-(--ink)/25 bg-white px-4 py-3 text-base text-(--ink) placeholder:text-(--muted)/70 hover:border-(--ink)/50 focus:border-(--ink) focus:outline-2 focus:outline-offset-1 focus:outline-(--tone) aria-invalid:border-red-700" />
+                </div>
+                <button type="button" data-add-link hidden class="mt-2 inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold underline decoration-(--line) underline-offset-4 hover:decoration-current">+ Dodaj še eno povezavo</button>
+                <p id="povezava-napaka" data-error="povezava" class="mt-1 text-sm font-medium text-red-800 empty:hidden"></p>
+              </div>
+
+              <div class="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label for="email" class="font-semibold">E-pošta</label>
+                  <input id="email" name="email" type="email" autocomplete="email" required aria-describedby="email-napaka" class="w-full min-h-12 rounded-xl border border-(--ink)/25 bg-white px-4 py-3 text-base text-(--ink) placeholder:text-(--muted)/70 hover:border-(--ink)/50 focus:border-(--ink) focus:outline-2 focus:outline-offset-1 focus:outline-(--tone) aria-invalid:border-red-700 mt-2" />
+                  <p id="email-napaka" data-error="email" class="mt-1 text-sm font-medium text-red-800 empty:hidden"></p>
+                </div>
+                <div>
+                  <label for="ime" class="font-semibold">Ime <span class="font-normal text-(--muted)">(neobvezno)</span></label>
+                  <input id="ime" name="ime" type="text" autocomplete="name" class="w-full min-h-12 rounded-xl border border-(--ink)/25 bg-white px-4 py-3 text-base text-(--ink) placeholder:text-(--muted)/70 hover:border-(--ink)/50 focus:border-(--ink) focus:outline-2 focus:outline-offset-1 focus:outline-(--tone) aria-invalid:border-red-700 mt-2" />
+                </div>
+                <div>
+                  <label for="telefon" class="font-semibold">Telefon <span class="font-normal text-(--muted)">(neobvezno)</span></label>
+                  <input id="telefon" name="telefon" type="tel" autocomplete="tel" class="w-full min-h-12 rounded-xl border border-(--ink)/25 bg-white px-4 py-3 text-base text-(--ink) placeholder:text-(--muted)/70 hover:border-(--ink)/50 focus:border-(--ink) focus:outline-2 focus:outline-offset-1 focus:outline-(--tone) aria-invalid:border-red-700 mt-2" />
+                </div>
+                <div>
+                  <label for="enote" class="font-semibold">Število enot</label>
+                  <select id="enote" name="enote" class="w-full min-h-12 rounded-xl border border-(--ink)/25 bg-white px-4 py-3 text-base text-(--ink) placeholder:text-(--muted)/70 hover:border-(--ink)/50 focus:border-(--ink) focus:outline-2 focus:outline-offset-1 focus:outline-(--tone) aria-invalid:border-red-700 mt-2">
+                    {Array.from({ length: pricing.maxUnits }, (_, i) => <option value={i + 1}>{i + 1}</option>)}
+                    <option value={pricing.maxUnits + 1}>{pricing.maxUnits + 1} ali več</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label for="sporocilo" class="font-semibold">Kaj naj še vemo? <span class="font-normal text-(--muted)">(neobvezno)</span></label>
+                <textarea id="sporocilo" name="sporocilo" rows="3" placeholder="Npr. kaj gostje pri vas najbolj cenijo ali kdaj bi stran potrebovali." class="w-full min-h-12 rounded-xl border border-(--ink)/25 bg-white px-4 py-3 text-base text-(--ink) placeholder:text-(--muted)/70 hover:border-(--ink)/50 focus:border-(--ink) focus:outline-2 focus:outline-offset-1 focus:outline-(--tone) aria-invalid:border-red-700 mt-2 resize-y"></textarea>
+              </div>
+
+              <div class="sr-only" aria-hidden="true">
+                <label for="spletna_stran">Pustite prazno</label>
+                <input id="spletna_stran" name="spletna_stran" type="text" tabindex="-1" autocomplete="off" />
+              </div>
+
+              <div>
+                <button type="submit" class={`${button} w-full disabled:opacity-60 sm:w-fit`}>Pošljite za brezplačen predogled</button>
+                <p class="mt-3 text-sm leading-relaxed text-(--muted)">Podatke uporabimo samo za predogled in odgovor. Na nič vas ne veže.</p>
+                <p data-status role="alert" class="mt-3 text-sm font-medium text-red-800 empty:hidden"></p>
+              </div>
+            </form>
+
+            <div data-izba-sent hidden tabindex="-1" class="rounded-[1.25rem] bg-(--paper) p-6 sm:rounded-[1.6rem] sm:p-10">
+              <p class="grid size-12 place-items-center rounded-full bg-(--deep) text-xl font-semibold text-(--accent)" aria-hidden="true">✓</p>
+              <h3 class="mt-5 text-3xl font-semibold tracking-[-.04em]">Hvala, prejeli smo.</h3>
+              <p class="mt-3 max-w-[40ch] leading-relaxed text-(--muted)">Predogled vam pošljemo na <strong data-sent-email class="text-(--ink)"></strong> v 3 delovnih dneh. Če bomo kaj potrebovali, vas pokličemo ali vam pišemo.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class={`${shell} flex flex-wrap justify-between gap-x-5 gap-y-2 py-7 text-sm leading-relaxed text-(--muted) sm:py-9`}>
+      <p>Izba · storitev studia <a href="/" class="font-semibold underline underline-offset-4">Kompozitor</a></p>
+      <p>{owner} · <a href={tel} class="underline underline-offset-4">{phone}</a> · <a href={`mailto:${inbox}`} class="underline underline-offset-4">{inbox}</a></p>
+    </footer>
+
+<script>
+  // Hero carousel: the active tab's progress bar times the slide (pauses on
+  // hover/focus); clicking a tab stops autoplay. No autoplay for reduced motion.
+  for (const carousel of document.querySelectorAll<HTMLElement>('[data-carousel]')) {
+    const slides = [...carousel.querySelectorAll<HTMLElement>('[data-slide]')];
+    const tabs = [...carousel.querySelectorAll<HTMLButtonElement>('[data-tab]')];
+    let playing = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const show = (n: number) => {
+      slides.forEach((slide, i) => {
+        slide.toggleAttribute('data-active', i === n);
+        slide.inert = i !== n;
+      });
+      tabs.forEach((tab, i) => {
+        tab.setAttribute('aria-pressed', String(i === n));
+        tab.querySelector('[data-fill]')?.classList.toggle('animate-progress', playing && i === n);
+      });
+    };
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => { playing = false; show(i); });
+      tab.querySelector('[data-fill]')?.addEventListener('animationend', () => show((i + 1) % slides.length));
+    });
+    show(0);
+  }
+
+  import { euro, phone, setupPrice, pricing } from '../../izba';
+  import { inbox } from '../../data';
+
+  const calc = document.querySelector<HTMLElement>('[data-calc]');
+  if (calc) {
+    const out = (name: string) => calc.querySelector<HTMLElement>(`[data-out="${name}"]`)!;
+    calc.addEventListener('change', (event) => {
+      const units = Number((event.target as HTMLInputElement).value);
+      const setup = setupPrice(units);
+      calc.querySelector<HTMLElement>('[data-quote]')!.hidden = setup !== null;
+      calc.querySelector<HTMLElement>('[data-priced]')!.hidden = setup === null;
+      if (setup === null) {
+        out('setup').textContent = 'Po dogovoru';
+        out('formula').textContent = '';
+        return;
+      }
+      out('setup').textContent = euro(setup);
+      out('formula').textContent = units === 1 ? `ena enota · vsaka naslednja +${euro(pricing.perUnit)}` : `${euro(pricing.base)} + ${units - 1} × ${euro(pricing.perUnit)}`;
+      out('first').textContent = euro(setup + pricing.yearly);
+      const select = document.querySelector<HTMLSelectElement>('#enote');
+      if (select) select.value = String(units);
+    });
+  }
+
+  const form = document.querySelector<HTMLFormElement>('[data-izba-form]');
+  if (form) {
+    const links = form.querySelector<HTMLElement>('[data-links]')!;
+    const addLink = form.querySelector<HTMLButtonElement>('[data-add-link]')!;
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const submit = form.querySelector<HTMLButtonElement>('[type="submit"]')!;
+    const maxLinks = 5;
+
+    addLink.hidden = false;
+    addLink.addEventListener('click', () => {
+      const first = links.querySelector('input')!;
+      const input = first.cloneNode() as HTMLInputElement;
+      input.id = `povezava-${links.children.length + 1}`;
+      input.required = false;
+      input.value = '';
+      input.setAttribute('aria-label', `Povezava ${links.children.length + 1}`);
+      links.append(input);
+      input.focus();
+      addLink.hidden = links.children.length >= maxLinks;
+    });
+
+    const showErrors = (errors: Record<string, string>) => {
+      for (const el of form.querySelectorAll<HTMLElement>('[data-error]')) {
+        const message = errors[el.dataset.error!] ?? '';
+        el.textContent = message;
+        const field = el.dataset.error === 'povezava' ? links.querySelector('input') : form.querySelector(`#${el.dataset.error}`);
+        if (message) field?.setAttribute('aria-invalid', 'true');
+        else field?.removeAttribute('aria-invalid');
+      }
+      const first = Object.keys(errors)[0];
+      if (first) (first === 'povezava' ? links.querySelector('input') : form.querySelector<HTMLElement>(`#${first}`))?.focus();
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      status.textContent = '';
+      submit.disabled = true;
+      try {
+        const response = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
+        const result = await response.json().catch(() => ({}));
+        if (response.ok && result.ok) {
+          const sent = document.querySelector<HTMLElement>('[data-izba-sent]')!;
+          sent.querySelector('[data-sent-email]')!.textContent = String(new FormData(form).get('email'));
+          form.hidden = true;
+          sent.hidden = false;
+          sent.focus();
+          return;
+        }
+        if (response.status === 400 && result.errors) showErrors(result.errors);
+        else throw new Error(`HTTP ${response.status}`);
+      } catch {
+        status.textContent = `Pošiljanje ni uspelo. Pišite na ${inbox} ali pokličite ${phone}.`;
+      } finally {
+        submit.disabled = false;
+      }
+    });
+  }
+
+  // Match scroll progress rather than pixels: the screenshots have different heights.
+  for (const project of document.querySelectorAll('#primer article')) {
+    const [desktop, mobile] = project.querySelectorAll<HTMLElement>('[role="region"]');
+    if (!desktop || !mobile) continue;
+    const mirrored = new WeakMap<HTMLElement, number>();
+    for (const [source, target] of [[desktop, mobile], [mobile, desktop]]) {
+      source.addEventListener('scroll', () => {
+        const top = source.scrollTop;
+        const applied = mirrored.get(source);
+        mirrored.delete(source);
+        if (top === applied) return; // Don't mirror a programmatic scroll back.
+
+        const range = source.scrollHeight - source.clientHeight;
+        if (range <= 0) return;
+        const progress = Math.max(0, Math.min(1, top / range));
+        const before = target.scrollTop;
+        target.scrollTop = progress * (target.scrollHeight - target.clientHeight);
+        if (target.scrollTop !== before) mirrored.set(target, target.scrollTop);
+      });
+    }
+  }
+
+  // Projects switch with CSS radios. Links to #project-id (e.g. from the hero)
+  // tick that project's radio first, so its article is visible to scroll to.
+  const pickProject = (id: string) => {
+    const radio = id ? document.querySelector<HTMLInputElement>(`#projekt-${CSS.escape(id)}`) : null;
+    if (radio) radio.checked = true;
+    return !!radio;
+  };
+  document.addEventListener('click', (event) => {
+    const link = (event.target as Element).closest<HTMLAnchorElement>('a[href^="#"]');
+    if (link) pickProject(link.hash.slice(1));
+  });
+  if (pickProject(location.hash.slice(1))) document.getElementById(location.hash.slice(1))?.scrollIntoView();
+</script>
+  </body>
+</html>
