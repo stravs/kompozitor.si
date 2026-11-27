@@ -65,11 +65,11 @@ const projects = [
   },
 ];
 const process = [
-  ['Vi', 'Pošljete oglas', 'Pošljete povezavo do nastanitve na Bookingu ali Airbnbju.'],
-  ['Mi', 'Spoznamo vašo nastanitev', 'Preberemo oglas in mnenja gostov ter pregledamo fotografije. Tako vidimo, kaj gostje pri vas najbolj cenijo.'],
-  ['Mi', 'Pripravimo predogled', 'V 3 delovnih dneh vam pošljemo stran, kot bi bila videti. Predogled je brezplačen in vas na nič ne veže.'],
-  ['Skupaj', 'Potrdimo in objavimo', 'Pogledate stran in nam v enem sporočilu poveste, kaj bi spremenili. Ko ste zadovoljni in je plačano, je stran v 3 delovnih dneh na spletu.'],
-];
+  ['Vi', 'Pošljete povezavo', 'Pošljete nam povezavo do oglasa na Bookingu ali Airbnbju. Za začetek ne potrebujemo ničesar drugega.'],
+  ['Izba', 'Pripravimo predogled', 'Pregledamo oglas, fotografije in mnenja gostov. V 3 delovnih dneh vam pošljemo brezplačen predogled brez obveznosti.'],
+  ['Vi', 'Pregledate in potrdite', 'Če želite spremembe, jih zberete v enem sporočilu. Popravke uredimo mi. Ko vam stran ustreza, jo potrdite in plačate.'],
+  ['Izba', 'Objavimo stran', 'Po potrditvi in plačilu vašo spletno stran objavimo v 3 delovnih dneh.'],
+] as const;
 const included = [
   { id: 'nasveti', title: 'Nasveti za vaš oglas', body: 'Preberemo vaš oglas in mnenja gostov, opozorimo na morebitna neskladja v opisu ter vam povemo, kako lahko nastanitev predstavite še bolje. Po želji izbrane pohvale postavimo na stran.', image: reviewsShot, alt: 'Del strani Apartments Olga z oceno 9,1 na Bookingu in tremi mnenji gostov' },
   { id: 'fotografije', title: 'Besedila in fotografije', body: 'Uredimo opise ter izberemo in razvrstimo fotografije. Po potrebi jih malo posvetlimo ali poravnamo. Novega fotografiranja ni.', image: photosShot, alt: 'Del strani InGreen: fotografije vrta in bazena, urejene v galerijo s kratkimi opisi' },
@@ -144,9 +144,9 @@ const questions = [
           <p class="flex items-baseline gap-2.5 text-sm font-medium text-(--muted)"><span class="size-2 shrink-0 rounded-full bg-(--tone)" aria-hidden="true"></span>Spletne strani za apartmaje in manjše nastanitve</p>
           <h1 class="mt-4 max-w-[15ch] text-[clamp(2.35rem,11vw,3.55rem)] leading-[.96] font-semibold tracking-[-.052em] text-balance [word-spacing:.025em] sm:mt-6 sm:text-[clamp(3.35rem,6.5vw,4.5rem)] lg:text-[clamp(3.35rem,5.72vw,6rem)]">Iz vašega <span class="sr-only text-(--deep) motion-reduce:not-sr-only">Booking.com/<wbr />Airbnb</span><span class="inline-grid text-(--deep) motion-reduce:hidden"><span aria-hidden="true" class="col-start-1 row-start-1 animate-roll will-change-transform">Booking.com</span><span aria-hidden="true" class="col-start-1 row-start-1 animate-roll opacity-0 will-change-transform [animation-delay:-3s]">Airbnb</span></span> oglasa do spletne strani <span class="block"><span class="relative isolate -mx-[.1em] inline-block before:absolute before:inset-0 before:-z-10 before:origin-left before:animate-highlight before:rounded-[.12em] before:bg-(--deep) motion-reduce:before:animate-none"><span class="-my-[.1em] inline-block bg-[linear-gradient(to_right,var(--accent)_50%,var(--ink)_50%)] bg-size-[200%_100%] bg-left bg-clip-text px-[.1em] py-[.1em] text-transparent animate-highlight-text motion-reduce:animate-none">po meri.</span></span></span></h1>
           <p class="mt-5 max-w-[45ch] text-base leading-[1.6] text-(--muted) sm:mt-6 sm:text-lg">Pošljete nam povezavo do oglasa, mi pa pripravimo spletno stran za vašo nastanitev v štirih jezikih. Oglas obdržite, gostje pa vam lahko pišejo tudi neposredno.</p>
-          <div class="mt-5 flex flex-wrap items-center gap-x-6 sm:mt-8">
+          <div class="mt-5 flex flex-wrap items-center gap-3 sm:mt-8">
             <a href="#stik" class={button}>Pošljite povezavo do oglasa</a>
-            <a href="#primer" class="inline-flex min-h-11 items-center text-sm font-semibold underline decoration-(--line) underline-offset-4 hover:decoration-current">Poglejte primere</a>
+            <a href="#primer" class={`${buttonBase} border border-(--line) hover:border-(--ink) hover:bg-(--field)`}>Poglejte primere</a>
           </div>
           <p class="mt-1 text-sm leading-relaxed text-(--muted) sm:mt-4">Dovolj je povezava. Brez gesel, novih fotografij ali besedil.</p>
         </div>
@@ -228,20 +228,18 @@ const questions = [
       </section>
 
       <section id="postopek" class={`${shell} scroll-mt-6`}>
-        <div class="grid gap-8 rounded-[1.5rem] bg-(--field) px-5 py-8 sm:gap-10 sm:rounded-[2rem] sm:p-10 lg:grid-cols-[.9fr_1.1fr] lg:gap-12 lg:p-13 xl:p-16">
-          <div>
-            <p class={label}>Kako sodelujemo</p>
-            <h2 class={`${display} mt-4`}>Od oglasa<br />do objave.</h2>
-            <p class="mt-5 max-w-[31ch] leading-relaxed text-(--muted) sm:text-lg">Potrebujete le povezavo do oglasa. Za vse ostalo poskrbimo mi.</p>
-          </div>
-          <ol role="list" data-steps class="divide-y divide-(--line) border-t border-(--line)">
+        <div class="rounded-[1.5rem] bg-(--field) px-5 py-8 sm:rounded-[2rem] sm:p-10 lg:p-12">
+          <p class={label}>Kako sodelujemo</p>
+          <h2 class={`${display} mt-4`}>Od oglasa do objave.</h2>
+          <ol role="list" data-steps class="mt-7 grid gap-3 sm:mt-9 sm:grid-cols-2 sm:gap-4 xl:grid-cols-4">
             {process.map(([who, title, body], i) => (
-              <li data-active={i === 0 ? '' : undefined} class="group grid grid-cols-[2.25rem_minmax(0,1fr)] items-start gap-3 py-4.5 sm:gap-4 sm:py-5">
-                <span aria-hidden="true" class="grid size-9 place-items-center rounded-full border border-(--line) text-xs font-semibold tabular-nums group-data-active:border-(--deep) group-data-active:bg-(--deep) group-data-active:text-(--accent) motion-safe:transition-colors">0{i + 1}</span>
-                <div>
-                  <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5"><h3 class="text-xl font-semibold tracking-tight">{title}</h3><span class="text-sm font-medium text-(--muted)">{who}</span></div>
-                  <p class="mt-1 max-w-lg leading-relaxed text-(--muted)">{body}</p>
+              <li class="rounded-2xl border border-(--line) bg-(--paper) p-5">
+                <div class="flex items-center justify-between gap-3">
+                  <strong class={`rounded-full border px-3 py-1 text-sm font-semibold ${who === 'Vi' ? 'border-(--line) text-(--ink)' : 'border-transparent bg-(--deep) text-(--accent)'}`}>{who}</strong>
+                  <span aria-hidden="true" class="text-sm font-medium text-(--muted) tabular-nums">0{i + 1}</span>
                 </div>
+                <h3 class="mt-4 text-xl font-semibold tracking-tight text-balance">{title}</h3>
+                <p class="mt-2 leading-relaxed text-(--muted)">{body}</p>
               </li>
             ))}
           </ol>
@@ -439,6 +437,21 @@ const questions = [
               </div>
 
               <div>
+                <label for="rezervacije" class="font-semibold">Rezervacijski sistem <span class="font-normal text-(--muted)">(neobvezno)</span></label>
+                <select id="rezervacije" name="rezervacije" class="mt-2 min-h-12 w-full rounded-xl border border-(--ink)/25 bg-white px-4 py-3 text-base text-(--ink) hover:border-(--ink)/50 focus:border-(--ink) focus:outline-2 focus:outline-offset-1 focus:outline-(--tone)">
+                  <option value="">Izberite, če ga uporabljate</option>
+                  <option>Bentral</option>
+                  <option>SnapGuest</option>
+                  <option>Drugo</option>
+                </select>
+                <div data-reservation-other class="mt-3">
+                  <label for="rezervacije-drugo" class="font-semibold">Ime drugega rezervacijskega sistema</label>
+                  <input id="rezervacije-drugo" name="rezervacije-drugo" type="text" maxlength="100" aria-describedby="rezervacije-drugo-napaka" class="mt-2 min-h-12 w-full rounded-xl border border-(--ink)/25 bg-white px-4 py-3 text-base text-(--ink) hover:border-(--ink)/50 focus:border-(--ink) focus:outline-2 focus:outline-offset-1 focus:outline-(--tone) aria-invalid:border-red-700" />
+                  <p id="rezervacije-drugo-napaka" data-error="rezervacije-drugo" class="mt-1 text-sm font-medium text-red-800 empty:hidden"></p>
+                </div>
+              </div>
+
+              <div>
                 <label for="sporocilo" class="font-semibold">Kaj naj še vemo? <span class="font-normal text-(--muted)">(neobvezno)</span></label>
                 <textarea id="sporocilo" name="sporocilo" rows="3" class="w-full min-h-12 rounded-xl border border-(--ink)/25 bg-white px-4 py-3 text-base text-(--ink) placeholder:text-(--muted)/70 hover:border-(--ink)/50 focus:border-(--ink) focus:outline-2 focus:outline-offset-1 focus:outline-(--tone) aria-invalid:border-red-700 mt-2 resize-y"></textarea>
               </div>
@@ -524,6 +537,17 @@ const questions = [
     const status = form.querySelector<HTMLElement>('[data-status]')!;
     const submit = form.querySelector<HTMLButtonElement>('[type="submit"]')!;
     const maxLinks = 5;
+    const reservation = form.querySelector<HTMLSelectElement>('#rezervacije')!;
+    const otherField = form.querySelector<HTMLElement>('[data-reservation-other]')!;
+    const otherInput = otherField.querySelector('input')!;
+    const syncReservation = () => {
+      const isOther = reservation.value === 'Drugo';
+      otherField.hidden = !isOther;
+      otherInput.disabled = !isOther;
+      otherInput.required = isOther;
+    };
+    reservation.addEventListener('change', syncReservation);
+    syncReservation();
 
     addLink.hidden = false;
     addLink.addEventListener('click', () => {
@@ -615,28 +639,6 @@ const questions = [
     const resized = new ResizeObserver(follow);
     for (const pane of panes) resized.observe(pane);
     for (const img of project.querySelectorAll('img')) img.addEventListener('load', follow);
-  }
-
-  // "Kako sodelujemo": highlight the step that has scrolled past the middle of
-  // the screen; while the pointer is over a step, highlight that one instead.
-  const steps = document.querySelector<HTMLElement>('[data-steps]');
-  if (steps) {
-    const items = [...steps.children] as HTMLElement[];
-    let hovered: HTMLElement | null = null;
-    let queued = false;
-    const update = () => {
-      queued = false;
-      const line = innerHeight * 0.55;
-      const scrolled = items.findLast((item) => item.getBoundingClientRect().top < line) ?? items[0];
-      const active = hovered ?? scrolled;
-      for (const item of items) item.toggleAttribute('data-active', item === active);
-    };
-    const queue = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
-    for (const item of items) item.addEventListener('pointerenter', () => { hovered = item; update(); });
-    steps.addEventListener('pointerleave', () => { hovered = null; update(); });
-    addEventListener('scroll', queue, { passive: true });
-    addEventListener('resize', queue, { passive: true });
-    update();
   }
 
   // Projects switch with CSS radios. Links to #project-id (e.g. from the hero)

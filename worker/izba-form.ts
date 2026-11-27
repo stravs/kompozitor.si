@@ -4,6 +4,7 @@ export type Submission = {
   name: string;
   phone: string;
   units: string;
+  reservationSystem: string;
   message: string;
 };
 
@@ -34,6 +35,14 @@ export function parseSubmission(form: FormData): Parsed {
   const email = text(form, 'email', 200);
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = 'Vpišite veljaven e-naslov.';
 
+  const system = text(form, 'rezervacije', 20);
+  let reservationSystem = '';
+  if (system === 'Bentral' || system === 'SnapGuest') reservationSystem = system;
+  if (system === 'Drugo') {
+    reservationSystem = text(form, 'rezervacije-drugo', 100).replace(/\s+/g, ' ').trim();
+    if (!reservationSystem) errors['rezervacije-drugo'] = 'Vpišite ime rezervacijskega sistema.';
+  }
+
   if (Object.keys(errors).length) return { ok: false, errors };
   return {
     ok: true,
@@ -45,6 +54,7 @@ export function parseSubmission(form: FormData): Parsed {
       name: text(form, 'ime', 100),
       phone: text(form, 'telefon', 40),
       units: text(form, 'enote', 2),
+      reservationSystem,
       message: text(form, 'sporocilo', 2000),
     },
   };
@@ -62,6 +72,7 @@ export function buildEmail(data: Submission) {
       `E-pošta: ${data.email}`,
       `Telefon: ${data.phone || '—'}`,
       `Število enot: ${units}`,
+      ...(data.reservationSystem ? [`Rezervacijski sistem: ${data.reservationSystem}`] : []),
       '',
       'Povezave:',
       ...(data.links.length ? data.links.map((link) => `- ${link}`) : ['—']),

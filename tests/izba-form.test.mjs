@@ -41,6 +41,24 @@ test('Accepts links without https, ignores empty extra links', () => {
   assert.match(mail.text, /- https:\/\/www\.airbnb\.com\/rooms\/123/);
 });
 
+test('Includes the selected reservation system in the email', () => {
+  for (const system of ['Bentral', 'SnapGuest', 'Drugo']) {
+    const custom = system === 'Drugo' ? ' Moj rezervacijski sistem ' : 'Ignore this';
+    const result = parseSubmission(form([
+      ['email', 'gost@example.com'], ['rezervacije', system], ['rezervacije-drugo', custom],
+    ]));
+    assert.equal(result.ok, true);
+    const expected = system === 'Drugo' ? custom.trim() : system;
+    assert.ok(buildEmail(result.data).text.split('\n').includes(`Rezervacijski sistem: ${expected}`));
+  }
+});
+
+test('Asks for the reservation system name when Other is selected', () => {
+  const result = parseSubmission(form([['email', 'gost@example.com'], ['rezervacije', 'Drugo']]));
+  assert.equal(result.ok, false);
+  assert.ok(result.errors['rezervacije-drugo']);
+});
+
 test('Rejects text that is not a link', () => {
   const result = parseSubmission(form([['povezava', 'moj apartma'], ['email', 'a@b.si']]));
   assert.equal(result.ok, false);
