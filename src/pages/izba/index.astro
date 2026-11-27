@@ -12,6 +12,8 @@ import ingreen from '../../assets/projects/ingreen-full-desktop.webp';
 import ingreenUnitMobile from '../../assets/projects/ingreen-full-mobile.webp';
 import ingreenDesktop from '../../assets/projects/ingreen-feature-desktop.webp';
 import ingreenMobile from '../../assets/projects/ingreen-feature-mobile.webp';
+import roseDesktop from '../../assets/projects/rose-in-winter-full-desktop.webp';
+import roseMobile from '../../assets/projects/rose-in-winter-full-mobile.webp';
 import reviewsShot from '../../assets/included/reviews.webp';
 import photosShot from '../../assets/included/photos.webp';
 import siteDesktop from '../../assets/included/site-desktop.webp';
@@ -62,6 +64,10 @@ const projects = [
   {
     name: 'InGreen', id: 'ingreen', note: 'Obrne · Štirje apartmaji', href: ingreenUrl, image: ingreen, mobile: ingreenUnitMobile,
     alt: 'Angleška naslovna stran InGreen s fotografijo hiše in vrta ter pregledom štirih enot',
+  },
+  {
+    name: 'Rose in Winter', id: 'rose-in-winter', note: 'Bled · Pet apartmajev', href: 'https://roseinwinter.com/', image: roseDesktop, mobile: roseMobile,
+    alt: 'Angleška naslovna stran Rose in Winter z ilustracijo hiše in vrta ter pregledom apartmajev',
   },
 ];
 const process = [
@@ -187,16 +193,16 @@ const questions = [
           </div>
         </div>
         {/* Pure-CSS picker: each radio shows the article two siblings after it. */}
-        <div class="mt-8 grid grid-cols-3 gap-y-3 sm:mt-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,3fr)] lg:grid-rows-[auto_auto_auto_1fr] lg:gap-x-8 lg:gap-y-0">
+        <div style={`--project-count:${projects.length}`} class="mt-8 grid grid-cols-2 gap-x-2 gap-y-2 sm:mt-12 sm:grid-cols-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,3fr)] lg:grid-rows-[repeat(var(--project-count),auto)_1fr] lg:gap-x-8 lg:gap-y-0">
           {projects.map(({ name, id, note, href, image, mobile, alt }, i) => (
             <Fragment>
               <input type="radio" name="projekt" id={`projekt-${id}`} value={id} checked={i === 0} class="sr-only" />
-              <label for={`projekt-${id}`} class={`${['col-start-1 lg:row-start-1 lg:border-t', 'col-start-2 lg:row-start-2', 'col-start-3 lg:row-start-3'][i]} relative row-start-1 flex min-h-12 min-w-0 cursor-pointer flex-col justify-center gap-1 border-b border-(--line) px-2 py-3 text-center text-(--muted) hover:bg-(--field)/55 hover:text-(--ink) motion-safe:transition-colors after:pointer-events-none after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:bg-(--tone) after:opacity-0 sm:px-4 lg:col-start-1 lg:py-4 lg:pr-10 lg:text-left lg:after:inset-y-0 lg:after:right-auto lg:after:h-auto lg:after:w-0.5 [input:checked+&]:bg-(--field) [input:checked+&]:text-(--ink) [input:checked+&]:after:opacity-100 [input:focus-visible+&]:z-10 [input:focus-visible+&]:outline-2 [input:focus-visible+&]:-outline-offset-2`}>
+              <label for={`projekt-${id}`} class="relative flex min-h-12 min-w-0 cursor-pointer flex-col justify-center gap-1 border-b border-(--line) px-2 py-3 text-center text-(--muted) hover:bg-(--field)/55 hover:text-(--ink) motion-safe:transition-colors after:pointer-events-none after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:bg-(--tone) after:opacity-0 sm:px-4 lg:col-start-1 lg:py-4 lg:pr-10 lg:text-left lg:first-of-type:border-t lg:after:inset-y-0 lg:after:right-auto lg:after:h-auto lg:after:w-0.5 [input:checked+&]:bg-(--field) [input:checked+&]:text-(--ink) [input:checked+&]:after:opacity-100 [input:focus-visible+&]:z-10 [input:focus-visible+&]:outline-2 [input:focus-visible+&]:-outline-offset-2">
                 <span class="text-sm leading-tight font-semibold tracking-tight [overflow-wrap:anywhere] sm:text-base lg:text-xl">{name}</span>
                 <span class="hidden text-xs text-(--muted) sm:block lg:text-sm">{note}</span>
                 <svg aria-hidden="true" class="absolute top-1/2 right-4 hidden size-4 -translate-y-1/2 text-(--tone) opacity-0 lg:block [input:checked+label_&]:opacity-100" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 4 4 4-4 4" /></svg>
               </label>
-              <article id={id} aria-label={name} class="col-span-3 row-start-2 hidden min-w-0 scroll-mt-6 pt-2 lg:col-span-1 lg:col-start-2 lg:row-span-4 lg:row-start-1 lg:pt-0 [input:checked+label+&]:block">
+              <article id={id} aria-label={name} class="order-last col-span-full hidden min-w-0 scroll-mt-6 pt-2 lg:col-span-1 lg:col-start-2 lg:row-span-full lg:pt-0 [input:checked+label+&]:block">
                 {/* From sm up, the desktop sets the row height and the phone stretches to match. On phones they stack. */}
                 <div class="grid items-stretch gap-4 rounded-[1.25rem] bg-(--field) p-3 ring-1 ring-(--ink)/12 sm:grid-cols-[minmax(0,1fr)_26%] sm:gap-5 sm:rounded-[1.6rem] sm:p-6 lg:p-8">
                   <div class="overflow-hidden rounded-lg border border-(--ink)/15 bg-(--paper) shadow-[0_20px_40px_#101a1322] sm:rounded-xl">

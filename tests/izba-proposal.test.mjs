@@ -55,7 +55,7 @@ test('Hero showcase slides lead to their projects on the page', () => {
   assert.doesNotMatch(feature, /href="https?:/);
 });
 
-test('Selected work links to Nature Nook, Apartments Olga, and InGreen in order', () => {
+test('Selected work links to Nature Nook, Apartments Olga, InGreen, and Rose in Winter in order', () => {
   const html = readFileSync(file, 'utf8');
   const section = html.match(/<section\b[^>]*\bid="primer"[^>]*>([\s\S]*?)<\/section>/)?.[1] ?? '';
   const title = section.match(/<h2\b[^>]*>([\s\S]*?)<\/h2>/)?.[1] ?? '';
@@ -68,11 +68,12 @@ test('Selected work links to Nature Nook, Apartments Olga, and InGreen in order'
     ['Nature Nook', 'https://nature-nook.si/'],
     ['Apartments Olga', 'https://apartments-olga.si/'],
     ['InGreen', 'https://ingreen-house.si/'],
+    ['Rose in Winter', 'https://roseinwinter.com/'],
   ];
   assert.deepEqual(articles.map(([, attrs]) => attrs.match(/aria-label="([^"]*)"/)?.[1]), expected.map(([name]) => name));
   const radios = [...section.matchAll(/<input\b[^>]*name="projekt"[^>]*>/g)].map(([tag]) => tag);
-  assert.deepEqual(radios.map(tag => tag.match(/value="([^"]+)"/)?.[1]), ['nature-nook', 'apartments-olga', 'ingreen'], 'Projects switch without JS');
-  assert.deepEqual(radios.map(tag => /\bchecked\b/.test(tag)), [true, false, false]);
+  assert.deepEqual(radios.map(tag => tag.match(/value="([^"]+)"/)?.[1]), ['nature-nook', 'apartments-olga', 'ingreen', 'rose-in-winter'], 'Projects switch without JS');
+  assert.deepEqual(radios.map(tag => /\bchecked\b/.test(tag)), [true, false, false, false]);
   expected.forEach(([name, url], i) => {
     assert.ok(cards[i].includes(`href="${url}"`), `${name} must link to the project`);
     assert.match(cards[i], /<img\b[^>]*src="[^"]*-full-desktop[^"]*"/);
