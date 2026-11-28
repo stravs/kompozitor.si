@@ -15,7 +15,7 @@ const articles = await getArticles();
       <ul class="mt-10 grid border-t border-(--line) sm:mt-14">
         {articles.map(({ id, data }) => (
           <li class="border-b border-(--line)">
-            <a href={`/clanki/${id}/`} class="group grid gap-2 py-6 sm:grid-cols-[10rem_minmax(0,1fr)] sm:gap-8 sm:py-8">
+            <a href={`${id}/`} class="group grid gap-2 py-6 sm:grid-cols-[10rem_minmax(0,1fr)] sm:gap-8 sm:py-8">
               <time datetime={data.date.toISOString()} class="text-sm text-(--muted)">{formatDate(data.date)}{data.draft && ' · osnutek'}</time>
               <span>
                 <span class="block text-xl leading-snug font-semibold tracking-[-.025em] group-hover:underline group-hover:underline-offset-4 sm:text-2xl">{data.title}</span>

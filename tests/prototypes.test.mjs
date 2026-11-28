@@ -26,5 +26,8 @@ for(const path of ['indeks/','studio/'])test('Prototype /'+path,()=>{const html=
   const article = readFileSync('dist/izba/clanki/konec-prevlade-rezervacijskih-platform/index.html', 'utf8');
   assert.match(article, /<link rel="canonical" href="https:\/\/izba\.kompozitor\.si\/clanki\/konec-prevlade-rezervacijskih-platform\/"/);
   assert.match(article, /"@type":"BlogPosting"/);
-  assert.match(readFileSync('dist/izba/index.html', 'utf8'), /href="\/clanki\/"/);
+  assert.match(readFileSync('dist/izba/index.html', 'utf8'), /href="\.\/clanki\/"/);
+  // Relative, so the logo leads to Izba home both live (/) and in previews (/izba/).
+  assert.match(article, /<a href="\.\.\/\.\.\/" aria-label="Izba – naslovna stran"/);
+  assert.match(readFileSync('dist/izba/clanki/index.html', 'utf8'), /<a href="\.\.\/" aria-label="Izba – naslovna stran"/);
 });

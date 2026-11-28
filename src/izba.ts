@@ -16,3 +16,5 @@ export const whatsapp = 'https://wa.me/38669678887';
 export const origin = 'https://izba.kompozitor.si';
 /** Page width and side gutters shared by every Izba page. */
 export const shell = 'mx-auto max-w-[96rem] px-5 sm:px-10 xl:px-16';
+/** Relative link to Izba home from `path`, so it works at / (live) and /izba/ (dev, previews). */
+export const toHome = (path: string) => '../'.repeat(path.split('/').filter(Boolean).length) || './';

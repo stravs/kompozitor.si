@@ -37,14 +37,14 @@ const prose = [
 <Izba title={`${title} — Izba`} {description} {path} published={date} {schema}>
   <main id="vsebina" tabindex="-1" class={`${shell} pt-10 pb-16 sm:pt-16 sm:pb-24`}>
     <article class="mx-auto max-w-[42rem]">
-      <p class="text-sm text-(--muted)"><a href="/clanki/" class="underline underline-offset-4">Članki</a> · <time datetime={date.toISOString()}>{formatDate(date)}</time></p>
+      <p class="text-sm text-(--muted)"><a href="../" class="underline underline-offset-4">Članki</a> · <time datetime={date.toISOString()}>{formatDate(date)}</time></p>
       <h1 class="mt-4 text-[clamp(2.1rem,5.5vw,3.4rem)] leading-[1.02] font-semibold tracking-[-.045em] text-balance">{title}</h1>
       <p class="mt-5 text-xl leading-relaxed text-(--muted)">{description}</p>
       <div class={`mt-10 ${prose}`}><Content /></div>
       <aside class="mt-14 rounded-[1.4rem] bg-(--deep) p-6 text-(--on-deep) sm:p-8">
         <p class="text-xl font-semibold tracking-[-.02em] text-white">Želite lastno spletno stran za svojo nastanitev?</p>
         <p class="mt-2 leading-relaxed">Pošljite povezavo do oglasa na Bookingu ali Airbnbju. V 3 delovnih dneh pripravimo brezplačen predogled.</p>
-        <a href="/#stik" class="mt-5 inline-flex min-h-14 items-center rounded-full bg-(--accent) px-6 text-sm font-semibold text-(--ink) hover:bg-(--accent-hover) motion-safe:transition-colors">Pošljite povezavo do oglasa</a>
+        <a href="../../#stik" class="mt-5 inline-flex min-h-14 items-center rounded-full bg-(--accent) px-6 text-sm font-semibold text-(--ink) hover:bg-(--accent-hover) motion-safe:transition-colors">Pošljite povezavo do oglasa</a>
       </aside>
     </article>
   </main>
