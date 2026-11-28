@@ -12,3 +12,7 @@ export const owner = 'Anže Štravs';
 export const phone = '069 678 887';
 export const tel = 'tel:+38669678887';
 export const whatsapp = 'https://wa.me/38669678887';
+
+export const origin = 'https://izba.kompozitor.si';
+/** Page width and side gutters shared by every Izba page. */
+export const shell = 'mx-auto max-w-[96rem] px-5 sm:px-10 xl:px-16';

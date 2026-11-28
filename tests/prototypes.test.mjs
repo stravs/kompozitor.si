@@ -20,4 +20,11 @@ test('Home is a simple cartoon box stack even before JavaScript runs', () => {
     assert.match(carton, /<animate\b[^>]*attributeName="d"/, 'Its panels fold, not just the whole box moving');
   }
 });
-for(const path of ['indeks/','studio/'])test('Prototype /'+path,()=>{const html=readFileSync('dist/'+path+'index.html','utf8');assert.match(html,/<html lang="sl"/);assert.equal((html.match(/<h1\b/g)||[]).length,1); for(const text of ['Booking.com','Airbnb','mailto:anze@kompozitor.si','arborbled.si','new-bton.stravs-a','nature-nook.si','apartments-olga.si','apartments-bassanese.stravs-a','ingreen-house.si','studio-miska.stravs-a','<picture','srcset=','noindex'])assert.ok(html.includes(text),text);});
+for(const path of ['indeks/','studio/'])test('Prototype /'+path,()=>{const html=readFileSync('dist/'+path+'index.html','utf8');assert.match(html,/<html lang="sl"/);assert.equal((html.match(/<h1\b/g)||[]).length,1); for(const text of ['Booking.com','Airbnb','mailto:anze@kompozitor.si','arborbled.si','new-bton.stravs-a','nature-nook.si','apartments-olga.si','apartments-bassanese.stravs-a','ingreen-house.si','studio-miska.stravs-a','<picture','srcset=','noindex'])assert.ok(html.includes(text),text);});test('Published articles are built, listed in the sitemap and linked from the homepage', () => {
+  const sitemap = readFileSync('dist/izba/sitemap.xml', 'utf8');
+  for (const path of ['', 'clanki/', 'clanki/konec-prevlade-rezervacijskih-platform/']) assert.ok(sitemap.includes(`<loc>https://izba.kompozitor.si/${path}</loc>`), path);
+  const article = readFileSync('dist/izba/clanki/konec-prevlade-rezervacijskih-platform/index.html', 'utf8');
+  assert.match(article, /<link rel="canonical" href="https:\/\/izba\.kompozitor\.si\/clanki\/konec-prevlade-rezervacijskih-platform\/"/);
+  assert.match(article, /"@type":"BlogPosting"/);
+  assert.match(readFileSync('dist/izba/index.html', 'utf8'), /href="\/clanki\/"/);
+});

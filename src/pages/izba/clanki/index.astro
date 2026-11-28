@@ -1,0 +1,30 @@
+---
+import Izba from '../../../layouts/Izba.astro';
+import { shell } from '../../../izba';
+import { formatDate, getArticles } from '../../../lib/clanki';
+
+const articles = await getArticles();
+---
+<Izba title="Članki — Izba" description="Članki za lastnike apartmajev in manjših nastanitev: Booking, lastna spletna stran, neposredne rezervacije in iskanje z umetno inteligenco." path="/clanki/">
+  <main id="vsebina" tabindex="-1" class={`${shell} pt-10 pb-16 sm:pt-16 sm:pb-24`}>
+    <h1 class="text-[clamp(2.35rem,6vw,4rem)] leading-[.98] font-semibold tracking-[-.05em]">Članki</h1>
+    <p class="mt-4 max-w-[48ch] text-base leading-[1.6] text-(--muted) sm:text-lg">Za lastnike apartmajev in manjših nastanitev.</p>
+    {articles.length === 0 ? (
+      <p class="mt-10 text-(--muted)">Prvi članki so v pripravi.</p>
+    ) : (
+      <ul class="mt-10 grid border-t border-(--line) sm:mt-14">
+        {articles.map(({ id, data }) => (
+          <li class="border-b border-(--line)">
+            <a href={`/clanki/${id}/`} class="group grid gap-2 py-6 sm:grid-cols-[10rem_minmax(0,1fr)] sm:gap-8 sm:py-8">
+              <time datetime={data.date.toISOString()} class="text-sm text-(--muted)">{formatDate(data.date)}{data.draft && ' · osnutek'}</time>
+              <span>
+                <span class="block text-xl leading-snug font-semibold tracking-[-.025em] group-hover:underline group-hover:underline-offset-4 sm:text-2xl">{data.title}</span>
+                <span class="mt-2 block max-w-[60ch] leading-relaxed text-(--muted)">{data.description}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </main>
+</Izba>

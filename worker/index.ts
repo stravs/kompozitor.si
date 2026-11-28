@@ -77,12 +77,24 @@ export default {
       return new Response(`User-agent: *\nAllow: /\n\nSitemap: https://${IZBA_HOST}/sitemap.xml\n`, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
     }
     if (url.pathname === '/sitemap.xml') {
-      return new Response(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://${IZBA_HOST}/</loc></url></urlset>\n`, { headers: { 'Content-Type': 'application/xml; charset=utf-8' } });
+      const asset = await env.ASSETS.fetch(new Request(new URL('/izba/sitemap.xml', url), request));
+      return new Response(asset.body, { status: asset.status, headers: { 'Content-Type': 'application/xml; charset=utf-8' } });
     }
 
     if (url.pathname === '/') {
       url.pathname = '/izba/';
       return env.ASSETS.fetch(new Request(url, request));
+    }
+    // Articles: /clanki/ and /clanki/<slug>/ live under /izba/ in the build.
+    const article = url.pathname.match(/^\/clanki(?:\/[a-z0-9-]+)?\/?$/);
+    if (article) {
+      // Add the slash here so the asset redirect never shows the /izba/ prefix.
+      if (!url.pathname.endsWith('/')) {
+        url.pathname += '/';
+        return Response.redirect(url, 308);
+      }
+      const asset = await env.ASSETS.fetch(new Request(new URL(`/izba${url.pathname}${url.search}`, url), request));
+      if (asset.ok) return asset;
     }
     if (legacyIzbaPath || url.pathname === '/index.html') {
       url.pathname = '/';

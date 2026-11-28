@@ -1,0 +1,51 @@
+---
+import { render } from 'astro:content';
+import Izba from '../../../layouts/Izba.astro';
+import { origin, shell } from '../../../izba';
+import { formatDate, getArticles } from '../../../lib/clanki';
+
+export async function getStaticPaths() {
+  return (await getArticles()).map((article) => ({ params: { id: article.id }, props: { article } }));
+}
+
+const { article } = Astro.props;
+const { title, description, date } = article.data;
+const { Content } = await render(article);
+const path = `/clanki/${article.id}/`;
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  datePublished: date.toISOString(),
+  url: `${origin}${path}`,
+  inLanguage: 'sl',
+  publisher: { '@type': 'Organization', name: 'Izba', url: `${origin}/` },
+};
+// Markdown comes out as plain tags; style them here instead of a typography plugin.
+const prose = [
+  'text-lg leading-[1.7]',
+  '[&_p]:mt-5 [&_ul]:mt-5 [&_ol]:mt-5 [&_ul]:list-disc [&_ol]:list-decimal [&_ul]:pl-6 [&_ol]:pl-6 [&_li]:mt-2 [&_li]:pl-1',
+  '[&_h2]:mt-12 [&_h2]:text-[1.75rem] [&_h2]:leading-tight [&_h2]:font-semibold [&_h2]:tracking-[-.035em]',
+  '[&_h3]:mt-9 [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:tracking-[-.02em]',
+  '[&_a]:font-medium [&_a]:underline [&_a]:underline-offset-4 [&_strong]:font-semibold',
+  // Source lines: <small>Vir: …</small> in the Markdown.
+  '[&_small]:block [&_small]:text-sm [&_small]:leading-relaxed [&_small]:text-(--muted)',
+  '[&_blockquote]:mt-8 [&_blockquote]:border-l-4 [&_blockquote]:border-(--tone) [&_blockquote]:pl-5 [&_blockquote]:text-xl [&_blockquote]:text-(--muted)',
+].join(' ');
+---
+<Izba title={`${title} — Izba`} {description} {path} published={date} {schema}>
+  <main id="vsebina" tabindex="-1" class={`${shell} pt-10 pb-16 sm:pt-16 sm:pb-24`}>
+    <article class="mx-auto max-w-[42rem]">
+      <p class="text-sm text-(--muted)"><a href="/clanki/" class="underline underline-offset-4">Članki</a> · <time datetime={date.toISOString()}>{formatDate(date)}</time></p>
+      <h1 class="mt-4 text-[clamp(2.1rem,5.5vw,3.4rem)] leading-[1.02] font-semibold tracking-[-.045em] text-balance">{title}</h1>
+      <p class="mt-5 text-xl leading-relaxed text-(--muted)">{description}</p>
+      <div class={`mt-10 ${prose}`}><Content /></div>
+      <aside class="mt-14 rounded-[1.4rem] bg-(--deep) p-6 text-(--on-deep) sm:p-8">
+        <p class="text-xl font-semibold tracking-[-.02em] text-white">Želite lastno spletno stran za svojo nastanitev?</p>
+        <p class="mt-2 leading-relaxed">Pošljite povezavo do oglasa na Bookingu ali Airbnbju. V 3 delovnih dneh pripravimo brezplačen predogled.</p>
+        <a href="/#stik" class="mt-5 inline-flex min-h-14 items-center rounded-full bg-(--accent) px-6 text-sm font-semibold text-(--ink) hover:bg-(--accent-hover) motion-safe:transition-colors">Pošljite povezavo do oglasa</a>
+      </aside>
+    </article>
+  </main>
+</Izba>

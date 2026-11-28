@@ -126,3 +126,23 @@ test('Redirects legacy Izba URLs on the apex to the subdomain, not preview URLs'
   const preview = await worker.fetch(new Request('https://kompozitor-si.example.workers.dev/izba/'), env);
   assert.equal(await preview.text(), 'preview');
 });
+
+test('Serves Izba articles and sitemap from the /izba/ build folder', async () => {
+  const seen = [];
+  const env = { ASSETS: { fetch: (request) => {
+    const { pathname } = new URL(request.url);
+    seen.push(pathname);
+    return new Response(pathname, { status: pathname.includes('manjka') ? 404 : 200 });
+  } } };
+  const get = (path) => worker.fetch(new Request(`https://izba.kompozitor.si${path}`), env);
+  assert.equal(await (await get('/clanki/')).text(), '/izba/clanki/');
+  assert.equal(await (await get('/clanki/nek-clanek/')).text(), '/izba/clanki/nek-clanek/');
+  const bare = await get('/clanki/nek-clanek?x=1');
+  assert.equal(bare.status, 308);
+  assert.equal(bare.headers.get('Location'), 'https://izba.kompozitor.si/clanki/nek-clanek/?x=1');
+  assert.equal((await get('/clanki/manjka/')).status, 404);
+  assert.equal((await get('/clanki/a/b/')).status, 404);
+  const sitemap = await get('/sitemap.xml');
+  assert.equal(sitemap.headers.get('Content-Type'), 'application/xml; charset=utf-8');
+  assert.equal(await sitemap.text(), '/izba/sitemap.xml');
+});

@@ -1,0 +1,79 @@
+---
+import '../styles/global.css';
+import '@fontsource-variable/instrument-sans';
+import { getImage } from 'astro:assets';
+import fontLatin from '@fontsource-variable/instrument-sans/files/instrument-sans-latin-wght-normal.woff2?url';
+import fontLatinExt from '@fontsource-variable/instrument-sans/files/instrument-sans-latin-ext-wght-normal.woff2?url';
+import ingreenDesktop from '../assets/projects/ingreen-feature-desktop.webp';
+import { inbox } from '../data';
+import { origin, owner, phone, shell, tel } from '../izba';
+import { getArticles } from '../lib/clanki';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Path on izba.kompozitor.si, e.g. '/' or '/clanki/slug/'. */
+  path: string;
+  published?: Date;
+  schema?: object;
+}
+const { title, description, path, published, schema } = Astro.props;
+const home = path === '/';
+// The homepage also previews at /izba/ on workers.dev, so its links stay relative.
+const base = home ? '' : '/';
+const url = `${origin}${path}`;
+// Link preview for WhatsApp, Facebook, Viber… (1.9:1, the common card shape).
+const social = await getImage({ src: ingreenDesktop, width: 1100, height: 578, fit: 'cover', position: 'top', format: 'jpg' });
+const hasArticles = (await getArticles()).length > 0;
+const navLink = 'flex min-h-11 items-center hover:underline hover:underline-offset-4';
+---
+<!doctype html>
+<html lang="sl" class="motion-safe:scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={url} />
+    <link rel="icon" href="/izba-mark.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#f7f7f0" />
+    <link rel="preload" href={fontLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={fontLatinExt} as="font" type="font/woff2" crossorigin />
+    <meta property="og:type" content={published ? 'article' : 'website'} />
+    {published && <meta property="article:published_time" content={published.toISOString()} />}
+    <meta property="og:locale" content="sl_SI" />
+    <meta property="og:site_name" content="Izba" />
+    <meta property="og:url" content={url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(social.src, origin).href} />
+    <meta property="og:image:width" content={String(social.attributes.width)} />
+    <meta property="og:image:height" content={String(social.attributes.height)} />
+    <meta property="og:image:alt" content="Naslovna stran InGreen, izdelana z Izbo" />
+    <meta name="twitter:card" content="summary_large_image" />
+    {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
+  </head>
+  <body data-izba-palette class="bg-(--paper) font-['Instrument_Sans_Variable',system-ui,sans-serif] text-(--ink) antialiased selection:bg-(--deep) selection:text-(--accent) [&_a]:focus-visible:outline-2 [&_a]:outline-offset-4 [&_summary]:focus-visible:outline-2 [&_summary]:outline-offset-4">
+    <a href="#vsebina" class="sr-only z-50 bg-(--deep) font-semibold text-(--accent) focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:rounded-xl focus:px-4 focus:py-3">Preskoči na vsebino</a>
+    <header class={shell}>
+      <div class="flex min-h-17 flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-(--line) py-2.5 sm:min-h-20">
+        <a href={home ? './' : '/'} aria-label="Izba – naslovna stran" class="inline-flex min-h-11 items-center gap-2.5 text-[2rem] leading-none font-bold tracking-[-.075em] sm:text-[2.2rem]">
+          <span class="grid size-8 place-items-center rounded-lg bg-(--deep) text-(--accent) sm:size-9"><svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 29V3h26v26h-3V6H6v23H3Zm4-22 11 3.5v15L7 29V7Z" /></svg></span>
+          izba
+        </a>
+        <nav aria-label="Po strani" class="flex items-center gap-3 text-sm font-medium sm:gap-8">
+          <a class={navLink} href={`${base}#primer`}>Delo</a>
+          <a class={navLink} href={`${base}#cene`}>Cene</a>
+          <a class="flex min-h-11 items-center rounded-full border border-(--line) px-3 hover:border-(--ink) sm:px-4" href={`${base}#stik`}>Stik</a>
+        </nav>
+      </div>
+    </header>
+
+    <slot />
+
+    <footer class={`${shell} flex flex-wrap justify-between gap-x-5 gap-y-2 py-7 text-sm leading-relaxed text-(--muted) sm:py-9`}>
+      <p>Izba · storitev studia <a href="https://kompozitor.si/" class="font-semibold underline underline-offset-4">Kompozitor</a>{hasArticles && <> · <a href="/clanki/" class="underline underline-offset-4">Članki</a></>}</p>
+      <p>{owner} · <a href={tel} class="underline underline-offset-4">{phone}</a> · <a href={`mailto:${inbox}`} class="underline underline-offset-4">{inbox}</a></p>
+    </footer>
+  </body>
+</html>
