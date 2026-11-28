@@ -1,7 +1,12 @@
 ---
 title: Ali se bliža konec prevlade spletnih rezervacijskih platform?
-description: Booking, Airbnb in Expedia prinašajo vse več prenočitev. Kako evropska zakonodaja, umetna inteligenca in neposredne rezervacije spreminjajo razmerje moči.
+description: "Na kratko: ne, ampak situacija se spreminja."
 date: 2026-11-28
+tldr:
+  - Platforme prinašajo vse več prenočitev. V Sloveniji leta 2025 že približno 70 % (leto prej 64 %).
+  - Od novembra 2024 lahko na lastni strani ponudite nižjo ceno kot na Bookingu, ne da bi vas platforma zaradi tega kaznovala.
+  - Gostje vse pogosteje iščejo z umetno inteligenco, ki jih ne vodi nujno na rezervacijske platforme.
+  - Platforme bodo ostale. Pametno pa je imeti poleg njih še lasten prodajni kanal.
 ---
 
 Booking.com, Airbnb in Expedia so v zadnjih dveh desetletjih korenito spremenili turistično industrijo. Spletne turistične agencije (OTA – Online Travel Agencies) so tudi najmanjšim ponudnikom nastanitev omogočile dostop do svetovnega trga.

@@ -16,6 +16,7 @@ import photosShot from '../../assets/included/photos.webp';
 import siteDesktop from '../../assets/included/site-desktop.webp';
 import siteMobile from '../../assets/included/site-mobile.webp';
 import { inbox } from '../../data';
+import { getArticles } from '../../lib/clanki';
 import { euro, origin, owner, phone, pricing, shell, tel, whatsapp } from '../../izba';
 
 const display = 'text-[clamp(2.45rem,5.1vw,5rem)] font-semibold leading-[.99] tracking-[-.05em] [word-spacing:.025em]';
@@ -84,7 +85,7 @@ const maintenance = [
   ['E-naslov z imenom vaše strani', 'Npr. info@vasa-nastanitev.si. Sporočila prihajajo v vaš obstoječi e-predal. Brez doplačila.'],
 ];
 const questions = [
-  ['Zakaj lastna spletna stran?', 'Z lastno stranjo niste odvisni le od Bookinga. Če Booking ali Airbnb spremeni pravila ali provizije ali vaš oglas skrije, lahko ostanete brez gostov. Lastna stran je vaša. Gostje vam prek nje pišejo neposredno, brez provizije. Vse več ljudi nastanitve išče tudi z orodji umetne inteligence, ki dostikrat predlagajo povezave do uradnih strani nastanitev.'],
+  ['Zakaj lastna spletna stran?', 'Z lastno stranjo niste odvisni le od Bookinga. Če Booking ali Airbnb spremeni pravila ali provizije ali vaš oglas skrije, lahko ostanete brez gostov. Lastna stran je vaša. Gostje vam prek nje pišejo neposredno, brez provizije. Vse več ljudi nastanitve išče tudi z orodji umetne inteligence, ki dostikrat predlagajo povezave do uradnih strani nastanitev.', 'konec-prevlade-rezervacijskih-platform'],
   ['Koliko stane predogled?', 'Predogled je brezplačen. Pripravimo ga v 3 delovnih dneh. Če vam ni všeč, ne plačate ničesar.'],
   ['Kaj se zgodi z oglasom na Bookingu ali Airbnbju?', 'Nič. Oglas ostane, kot je. Spletna stran je dodaten kraj, kjer vas gostje spoznajo in vam pišejo neposredno.'],
   ['Ali je sporočilo prek obrazca že rezervacija?', 'Ne. Sporočilo gosta pride na vaš e-naslov, termin in ceno pa se z njim dogovorite sami. Stran nima koledarja zasedenosti in ne sprejema plačil.'],
@@ -95,6 +96,8 @@ const questions = [
   ['Kdo je lastnik domene?', 'Naslov strani (domeno) registriramo na vaše ime in ga zaračunamo toliko, kolikor stane nas. Če se kdaj odločite končati sodelovanje, stran ugasne, vi pa obdržite naslov in dobite vse datoteke strani. Pri selitvi vam pomagamo.'],
   ['Koliko stane domena?', 'Domena .si stane približno 15 do 20 € na leto z DDV, domena .com podobno. Zaračunamo jo toliko, kolikor stane nas, in vam ceno povemo pred registracijo.'],
 ];
+// FAQ answers can point to an article (third item: its slug) once it is published.
+const articleTitles = new Map((await getArticles()).map(({ id, data }) => [id, data.title]));
 ---
 <Izba {title} {description} path="/" {schema}>
     <main id="vsebina" tabindex="-1">
@@ -324,7 +327,7 @@ const questions = [
       <section id="vprasanja" class={`${shell} grid scroll-mt-6 gap-7 py-16 sm:py-22 lg:grid-cols-[.8fr_1.2fr] lg:gap-14`}>
         <div><p class={label}>Preden začnemo</p><h2 class={`${display} mt-4`}>Pogosta<br />vprašanja.</h2></div>
         <div class="divide-y divide-(--line) border-y border-(--line)">
-          {questions.map(([question, answer]) => (
+          {questions.map(([question, answer, article]) => (
             <details class="group">
               <summary class="flex min-h-15 cursor-pointer list-none items-center justify-between gap-4 py-4 text-base font-semibold tracking-tight hover:underline sm:text-lg [&::-webkit-details-marker]:hidden">
                 {question}
@@ -332,7 +335,7 @@ const questions = [
                   <svg class="size-4 group-open:rotate-180" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4" /></svg>
                 </span>
               </summary>
-              <p class="max-w-[60ch] pb-5 leading-relaxed text-(--muted)">{answer}</p>
+              <p class="max-w-[60ch] pb-5 leading-relaxed text-(--muted)">{answer}{article && articleTitles.has(article) && <> Več v članku <a href={`clanki/${article}/`} class="font-medium text-(--ink) underline underline-offset-4">{articleTitles.get(article)}</a></>}</p>
             </details>
           ))}
         </div>

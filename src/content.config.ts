@@ -9,6 +9,8 @@ const clanki = defineCollection({
     title: z.string(),
     description: z.string(),
     date: z.coerce.date(),
+    // "Na kratko" points shown above the article instead of the description.
+    tldr: z.array(z.string()).optional(),
     // Drafts show in `npm run dev` only, never in the build.
     draft: z.boolean().default(false),
   }),
